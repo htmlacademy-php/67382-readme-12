@@ -39,6 +39,32 @@ $popular_posts = [
     'avatar' => 'userpic.jpg'
     ],
 ];
+
+function cut_post($text, $num_letters  = 300) {
+    $words = explode (" ", $text);
+    $total_words_length = 0;
+    $words_count = 0;
+    $is_cut = false;
+    foreach ($words as $word) {
+        $total_words_length += iconv_strlen($word);
+        $words_count++;
+        if ($total_words_length > $num_letters) {
+            $is_cut = true;
+            break;
+        } else {
+            ++$total_words_length;
+        };
+    }
+
+    if ($is_cut) {
+        $text = implode(" ", array_slice($words, 0, $words_count));
+        $post_content = '<p>' . $text . '...</p><a class="post-text__more-link" href="#">Читать далее</a>';
+    } else {
+        $post_content = '<p>' . $text . '</p>';
+    }
+
+    return $post_content;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -255,7 +281,7 @@ $popular_posts = [
                             </blockquote>
                             <?php break;
                         case 'post-text': ?>
-                            <p><?=$val['content'];?></p>
+                            <?=cut_post($val['content']);?>
                             <?php break;
                         case 'post-link': ?>
                             <div class="post-link__wrapper">
