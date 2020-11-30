@@ -132,20 +132,17 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
  */
 function include_template($name, array $data = [])
 {
-    $name = 'templates/' . $name;
-    $result = '';
+    $name = 'templates/' . $name . '.php';
 
     if (!is_readable($name)) {
-        return $result;
+        return false;
     }
 
     ob_start();
     extract($data);
     require $name;
 
-    $result = ob_get_clean();
-
-    return $result;
+    return ob_get_clean();
 }
 
 /**
