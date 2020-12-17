@@ -14,7 +14,7 @@ function cut_post($text, $num_letters  = 300) {
     $words_count = 0;
     $is_cut = false;
     foreach ($words_array as $word) {
-        $total_words_length += iconv_strlen($word);
+        $total_words_length += mb_strlen($word);
         $words_count++;
         if ($total_words_length > $num_letters) {
             $is_cut = true;
@@ -48,20 +48,20 @@ function convert_date($date) {
             $dt_number = ceil($dt / 60);
             return $dt_number . ' ' . get_noun_plural_form($dt_number, 'минута', 'минуты', 'минут') . ' назад';
 
-        case ($dt > 3600 && $dt < 86400):
+        case ($dt > 3600 && $dt < (60 * 60 * 24)):
             $dt_number = ceil($dt / 3600);
             return $dt_number . ' ' . get_noun_plural_form($dt_number, 'час', 'часа', 'часов') . ' назад';
 
-        case ($dt >= 86400 && $dt < 604800):
-            $dt_number = ceil($dt / 86400);
+        case ($dt >= (60 * 60 * 24) && $dt < (60 * 60 * 24 * 7)):
+            $dt_number = ceil($dt / (60 * 60 * 24));
             return $dt_number . ' ' . get_noun_plural_form($dt_number, 'день', 'дня', 'дней') . ' назад';
 
-        case ($dt >= 604800 && $dt <= 3024000):
-            $dt_number = ceil($dt / 604800);
+        case ($dt >= (60 * 60 * 24 * 7) && $dt <= (60 * 60 * 24 * 7 * 5)):
+            $dt_number = ceil($dt / (60 * 60 * 24 * 7));
             return $dt_number . ' ' . get_noun_plural_form($dt_number, 'неделя', 'недели', 'недель') . ' назад';
 
         default:
-            $dt_number = ceil($dt / 2592000);
+            $dt_number = ceil($dt / (60 * 60 * 24 * 30));
             return $dt_number . ' ' . get_noun_plural_form($dt_number, 'месяц', 'месяца', 'месяцев') . ' назад';
     }
 }
