@@ -14,7 +14,7 @@ function cut_post($text, $num_letters  = 300) {
     $words_count = 0;
     $is_cut = false;
     foreach ($words_array as $word) {
-        $total_words_length += iconv_strlen($word);
+        $total_words_length += mb_strlen($word);
         $words_count++;
         if ($total_words_length > $num_letters) {
             $is_cut = true;
@@ -41,27 +41,19 @@ function cut_post($text, $num_letters  = 300) {
  */
 
 function convert_date($date) {
-    $dt = time() - strtotime($date);
+    $diff = date_diff(date_create(), date_create($date));
 
     switch (true) {
-        case ($dt <= 3600):
-            $dt_number = ceil($dt / 60);
-            return $dt_number . ' ' . get_noun_plural_form($dt_number, 'минута', 'минуты', 'минут') . ' назад';
-
-        case ($dt > 3600 && $dt < 86400):
-            $dt_number = ceil($dt / 3600);
-            return $dt_number . ' ' . get_noun_plural_form($dt_number, 'час', 'часа', 'часов') . ' назад';
-
-        case ($dt >= 86400 && $dt < 604800):
-            $dt_number = ceil($dt / 86400);
-            return $dt_number . ' ' . get_noun_plural_form($dt_number, 'день', 'дня', 'дней') . ' назад';
-
-        case ($dt >= 604800 && $dt <= 3024000):
-            $dt_number = ceil($dt / 604800);
-            return $dt_number . ' ' . get_noun_plural_form($dt_number, 'неделя', 'недели', 'недель') . ' назад';
-
+        case ($diff->days > 35):
+            return $diff->m . ' ' . get_noun_plural_form($diff->m, 'месяц', 'месяца', 'месяцев') . ' назад';
+        case ($diff->days >= 7):
+            $dt = ceil(($diff->days)/7);
+            return $dt . ' ' . get_noun_plural_form($dt, 'неделя', 'недели', 'недель') . ' назад';
+        case ($diff->days > 0):
+            return $diff->days . ' ' . get_noun_plural_form($diff->days, 'день', 'дня', 'дней') . ' назад';
+        case ($diff->h > 0):
+            return $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов') . ' назад';
         default:
-            $dt_number = ceil($dt / 2592000);
-            return $dt_number . ' ' . get_noun_plural_form($dt_number, 'месяц', 'месяца', 'месяцев') . ' назад';
+            return $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут') . ' назад';
     }
 }

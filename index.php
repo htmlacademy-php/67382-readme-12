@@ -1,10 +1,8 @@
 <?php
+require_once 'config.php';
 require_once 'util/helpers.php';
 require_once 'tmp-data.php';
 require_once 'util/functions.php';
-
-date_default_timezone_set('Asia/Barnaul');
-// - date_default_timezone_set('Europe/Moscow');
 
 foreach ($popular_posts as $post_id => &$post) {
     $post['date'] = generate_random_date($post_id);
