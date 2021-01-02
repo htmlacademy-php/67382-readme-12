@@ -4,76 +4,66 @@ CREATE DATABASE readme
 
 USE readme;
 
-/* Пользователи */
+-- Пользователи
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   reg_date DATETIME,
-  email CHAR(128),
-  user_name CHAR(64),
-  password CHAR(64),
-  avatar CHAR(255)
+  email VARCHAR(128),
+  user_name VARCHAR(64),
+  password VARCHAR(255),
+  avatar VARCHAR(255),
+  UNIQUE INDEX email (email)
 );
 
-CREATE UNIQUE INDEX email ON users(email);
-CREATE UNIQUE INDEX password ON users(password);
-
-/* Типы постов */
+-- Типы постов
 CREATE TABLE posts_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  type_name CHAR(64),
-  icon_class CHAR(64)
+  type_name VARCHAR(64),
+  icon_class VARCHAR(64)
 );
 
-INSERT INTO posts_types SET type_name = 'Текст', icon_class='text';
-INSERT INTO posts_types SET type_name = 'Цитата', icon_class='quote';
-INSERT INTO posts_types SET type_name = 'Картинка', icon_class='photo';
-INSERT INTO posts_types SET type_name = 'Видео', icon_class='video';
-INSERT INTO posts_types SET type_name = 'Ссылка', icon_class='link';
-
-/* Тэги */
+-- Тэги
 CREATE TABLE tags (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  tag_name CHAR(64)
+  tag_name VARCHAR(64),
+  UNIQUE INDEX tag_name (tag_name)
 );
 
-CREATE UNIQUE INDEX tag_name ON tags(tag_name);
-
-/* Подписки на пользователей */
+-- Подписки на пользователей
 CREATE TABLE subscribe (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   tracked_id INT
 );
 
-/* Личные сообщения */
-CREATE TABLE private (
+-- Личные сообщения
+CREATE TABLE messages (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  msg_date DATETIME,
+  post_date DATETIME,
   author_id INT,
   recipient_id INT,
-  msg_text TEXT
+  content TEXT
 );
 
-/* Посты */
+-- Посты
 CREATE TABLE posts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   type_id INT,
   post_date DATETIME,
-  title CHAR(64),
+  title VARCHAR(64),
   content TEXT,
-  cite_author CHAR(64),
+  cite_author VARCHAR(64),
   is_repost TINYINT,
   initial_user_id INT,
-  views_total INT
+  views_total INT,
+  INDEX post_type (type_id),
+  INDEX post_date (post_date),
+  INDEX views_total (views_total),
+  FULLTEXT INDEX post_text (title, content)
 );
 
-CREATE INDEX post_date ON posts(post_date);
-CREATE INDEX views_total ON posts(views_total);
-CREATE INDEX post_types ON posts(type_id);
-CREATE FULLTEXT INDEX post_text ON posts(title, content);
-
-/* Комментарии */
+-- Комментарии
 CREATE TABLE comments (
   id INT AUTO_INCREMENT PRIMARY KEY,
   comment_date DATETIME,
@@ -82,18 +72,17 @@ CREATE TABLE comments (
   post_id INT
 );
 
-/* Тэги постов */
+-- Тэги постов
 CREATE TABLE post_tags (
   id INT AUTO_INCREMENT PRIMARY KEY,
   post_id INT,
   tag_id INT
 );
 
-/* Лайки */
+-- Лайки
 CREATE TABLE likes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
-  post_id INT
+  post_id INT,
+  INDEX post_id (post_id)
 );
-
-CREATE INDEX post_id ON likes(post_id);
