@@ -39,15 +39,17 @@ function cut_post($text, $num_letters  = 300) {
  * @return string строка с датой в относительном формате
  *
  */
+const WEEK_DAYS = 7;
+const MONTHS_LIMIT = 35;
 
 function convert_date($date) {
     $diff = date_diff(date_create(), date_create($date));
 
     switch (true) {
-        case ($diff->days > 35):
+        case ($diff->days > MONTHS_LIMIT):
             return $diff->m . ' ' . get_noun_plural_form($diff->m, 'месяц', 'месяца', 'месяцев') . ' назад';
-        case ($diff->days >= 7):
-            $dt = ceil(($diff->days)/7);
+        case ($diff->days >= WEEK_DAYS):
+            $dt = ceil(($diff->days)/WEEK_DAYS);
             return $dt . ' ' . get_noun_plural_form($dt, 'неделя', 'недели', 'недель') . ' назад';
         case ($diff->days > 0):
             return $diff->days . ' ' . get_noun_plural_form($diff->days, 'день', 'дня', 'дней') . ' назад';
