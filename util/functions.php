@@ -59,3 +59,26 @@ function convert_date($date) {
             return $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут') . ' назад';
     }
 }
+
+/**
+ * Возвращает размеры иконок фильтра для вставки в разметку
+ *
+ * @param string $icon_class - тип иконки
+ * @return string строка с размерами иконки
+ *
+ */
+
+function icons_sizes($icon_class) {
+    switch ($icon_class) {
+        case 'quote':
+            return 'width="21" height="20"';
+        case 'text':
+            return 'width="20" height="21"';
+        case 'link':
+            return 'width="21" height="18"';
+        case 'video':
+            return 'width="24" height="16"';
+        case 'photo':
+            return 'width="22" height="18"';
+    }
+}

@@ -2,6 +2,7 @@
 $is_auth = rand(0, 1);
 
 $user_name = 'Inna Suknovalnik'; // укажите здесь ваше имя
+/*
 $popular_posts = [
     [
         'title' => 'Цитата',
@@ -39,3 +40,4 @@ $popular_posts = [
         'avatar' => 'userpic.jpg'
     ],
 ];
+*/

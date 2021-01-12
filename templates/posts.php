@@ -1,21 +1,21 @@
 <?php if ($popular_posts): ?>
     <?php foreach ($popular_posts as $post): ?>
-        <article class="popular__post post <?= $post['type']; ?>">
+        <article class="popular__post post post-<?= $post['icon_class']; ?>">
             <header class="post__header">
                 <h2><?= htmlspecialchars($post['title']); ?></h2>
             </header>
             <div class="post__main">
-            <?php switch ($post['type']):
-                case 'post-quote': ?>
+            <?php switch ($post['icon_class']):
+                case 'quote': ?>
                     <blockquote>
                         <p><?= htmlspecialchars($post['content']); ?></p>
-                        <cite>Неизвестный Автор</cite>
+                        <cite><?= ($post['content_add']) ? htmlspecialchars($post['content_add']) : 'Неизвестный Автор'; ?></cite>
                     </blockquote>
                     <?php break;
-                case 'post-text': ?>
+                case 'text': ?>
                     <?= cut_post(htmlspecialchars($post['content'])); ?>
                     <?php break;
-                case 'post-link': ?>
+                case 'link': ?>
                     <div class="post-link__wrapper">
                         <a class="post-link__external" href="http://<?= strip_tags($post['content']); ?>" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
@@ -30,7 +30,7 @@
                         </a>
                     </div>
                     <?php break;
-                case 'post-video': ?>
+                case 'video': ?>
                     <div class="post-video__block">
                         <div class="post-video__preview">
                             <?= embed_youtube_cover(/* вставьте ссылку на видео */); ?>
@@ -44,7 +44,7 @@
                         </a>
                     </div>
                     <?php break;
-                case 'post-photo': ?>
+                case 'photo': ?>
                     <div class="post-photo__image-wrapper">
                         <img src="img/<?= strip_tags($post['content']); ?>" alt="Фото от пользователя" width="360" height="240">
                     </div>
@@ -58,8 +58,8 @@
                             <img class="post__author-avatar" src="img/<?= isset($post['avatar']) ? strip_tags($post['avatar']) : 'icon-input-user.svg'; ?>" alt="Аватар пользователя">
                         </div>
                         <div class="post__info">
-                            <b class="post__author-name"><?= isset($post['author']) ? htmlspecialchars($post['author']) : 'Неопознанный Енот'; ?></b>
-                            <time class="post__time" datetime="<?= $post['date']; ?>" title="<?= date('d.m.Y H:i', strtotime($post['date'])); ?>"><?= convert_date($post['date']); ?></time>
+                            <b class="post__author-name"><?= isset($post['user_name']) ? htmlspecialchars($post['user_name']) : 'Неопознанный Енот'; ?></b>
+                            <time class="post__time" datetime="<?= $post['post_date']; ?>" title="<?= date('d.m.Y H:i', strtotime($post['post_date'])); ?>"><?= convert_date($post['post_date']); ?></time>
                         </div>
                     </a>
                 </div>
