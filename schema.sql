@@ -53,7 +53,7 @@ CREATE TABLE posts (
   post_date DATETIME,
   title VARCHAR(64),
   content TEXT,
-  cite_author VARCHAR(64),
+  content_add VARCHAR(64),
   is_repost TINYINT,
   initial_user_id INT,
   views_total INT,
