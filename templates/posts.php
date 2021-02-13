@@ -2,7 +2,9 @@
     <?php foreach ($popular_posts as $post): ?>
         <article class="popular__post post post-<?= $post['icon_class']; ?>">
             <header class="post__header">
-                <h2><?= htmlspecialchars($post['title']); ?></h2>
+                <a href="post.php?id=<?= $post['id']; ?>">
+                    <h2><?= htmlspecialchars($post['title']); ?></h2>
+                </a>
             </header>
             <div class="post__main">
             <?php switch ($post['icon_class']):
@@ -17,16 +19,16 @@
                     <?php break;
                 case 'link': ?>
                     <div class="post-link__wrapper">
-                        <a class="post-link__external" href="http://<?= strip_tags($post['content']); ?>" title="Перейти по ссылке">
+                        <a class="post-link__external" href="http://<?= strip_tags($post['content_add']); ?>" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
                                 <div class="post-link__icon-wrapper">
-                                    <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
+                                    <img src="img/<?= strip_tags($post['link_icon']); ?>" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
                                     <h3><?= htmlspecialchars($post['title']); ?></h3>
                                 </div>
                             </div>
-                            <span><?= strip_tags($post['content']); ?></span>
+                            <span><?= strip_tags($post['content_add']); ?></span>
                         </a>
                     </div>
                     <?php break;
@@ -59,7 +61,7 @@
                         </div>
                         <div class="post__info">
                             <b class="post__author-name"><?= isset($post['user_name']) ? htmlspecialchars($post['user_name']) : 'Неопознанный Енот'; ?></b>
-                            <time class="post__time" datetime="<?= $post['post_date']; ?>" title="<?= date('d.m.Y H:i', strtotime($post['post_date'])); ?>"><?= convert_date($post['post_date']); ?></time>
+                            <time class="post__time" datetime="<?= $post['post_date']; ?>" title="<?= date('d.m.Y H:i', strtotime($post['post_date'])); ?>"><?= convert_date($post['post_date'], false); ?> назад</time>
                         </div>
                     </a>
                 </div>

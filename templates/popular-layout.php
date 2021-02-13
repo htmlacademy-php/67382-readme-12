@@ -36,14 +36,14 @@
             <b class="popular__filters-caption filters__caption">Тип контента:</b>
             <ul class="popular__filters-list filters__list">
                 <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                    <a class="filters__button filters__button--ellipse filters__button--all filters__button--active" href="#">
+                    <a class="filters__button filters__button--ellipse filters__button--all<?= (!$filters_type) ? ' filters__button--active' : ''; ?>" href="popular.php">
                         <span>Все</span>
                     </a>
                 </li>
                 <?php if ($posts_types): ?>
                     <?php foreach ($posts_types as $post_type): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= $post_type['icon_class']; ?> button" href="#">
+                        <a class="filters__button filters__button--<?= $post_type['icon_class']; ?><?=((int) $post_type['id'] === $filters_type) ? ' filters__button--active' : ''; ?> button" href="popular.php?id=<?= $post_type['id']; ?>">
                             <span class="visually-hidden"><?= $post_type['type_name']; ?></span>
                             <svg class="filters__icon" <?= icons_sizes($post_type['icon_class']); ?>>
                                 <use xlink:href="#icon-filter-<?= $post_type['icon_class']; ?>"></use>
@@ -57,5 +57,9 @@
     </div>
     <div class="popular__posts">
         <?= $content; ?>
+    </div>
+    <div class="popular__page-links">
+        <a class="popular__page-link popular__page-link--prev button button--gray" href="#">Предыдущая страница</a>
+        <a class="popular__page-link popular__page-link--next button button--gray" href="#">Следующая страница</a>
     </div>
 </div>
