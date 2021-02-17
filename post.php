@@ -39,6 +39,7 @@ WHERE p.id = '$post_id'";
                 'error' => $error
             ]);
             $page_title = 'readme: ошибка!';
+            header("HTTP/1.1 404 Not Found");
         }
     } else {
         $error = mysqli_error($con);
@@ -53,6 +54,7 @@ WHERE p.id = '$post_id'";
         'error' => $error
     ]);
     $page_title = 'readme: ошибка!';
+    header("HTTP/1.1 404 Not Found");
 }
 
 show_page($page_content, $page_title, $user_name);
