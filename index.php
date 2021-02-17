@@ -1,2 +1,2 @@
 <?php
-header("Location: /popular.php");
+header('Location: popular.php');

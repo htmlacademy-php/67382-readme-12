@@ -24,7 +24,7 @@
                 <div class="post-link__wrapper">
                     <a class="post-link__external" href="http://<?= strip_tags($post['content_add']); ?>" title="Перейти по ссылке">
                         <div class="post-link__icon-wrapper">
-                            <img src="img//<?= strip_tags($post['link_icon']); ?>" alt="Иконка">
+                            <img src="img/<?= strip_tags($post['link_icon']); ?>" alt="Иконка">
                         </div>
                         <div class="post-link__info">
                             <p><?= htmlspecialchars($post['content']); ?></p>

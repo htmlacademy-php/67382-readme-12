@@ -28,18 +28,31 @@ JOIN subscribe s
 WHERE p.id = '$post_id'";
     if ($res = mysqli_query($con, $sql)) {
         $post = mysqli_fetch_array($res, MYSQLI_ASSOC);
-        $page_content = include_template('post-details', [
-            'post' => $post
-        ]);
+        if ($post['post_date']) {
+            $page_content = include_template('post-details', [
+                'post' => $post
+            ]);
+            $page_title = 'readme: пост';
+        } else {
+            $error = '404: Страница не существует';
+            $page_content = include_template('error-layout', [
+                'error' => $error
+            ]);
+            $page_title = 'readme: ошибка!';
+        }
     } else {
-        $GLOBALS['error'] = mysqli_error($con);
-        header("Location: /error.php");
-        exit;
+        $error = mysqli_error($con);
+        $page_content = include_template('error-layout', [
+            'error' => $error
+        ]);
+        $page_title = 'readme: ошибка!';
     }
 } else {
-    $GLOBALS['error'] = '404';
-    header("Location: /error.php");
-    exit;
+    $error = '404: Страница не существует';
+    $page_content = include_template('error-layout', [
+        'error' => $error
+    ]);
+    $page_title = 'readme: ошибка!';
 }
 
-show_page($page_content, 'readme: пост', $user_name);
+show_page($page_content, $page_title, $user_name);
