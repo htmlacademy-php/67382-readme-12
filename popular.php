@@ -57,19 +57,11 @@ ORDER BY views_total DESC";
             'content' => $posts_content, 'posts_types' => $posts_types, 'filters_type' => $filters_type
         ]);
         $page_title = 'readme: популярное';
+        show_page($page_content, $page_title, $user_name);
     } else {
-        $error = mysqli_error($con);
-        $page_content = include_template('error-layout', [
-            'error' => $error
-        ]);
-        $page_title = 'readme: ошибка!';
+        show_error(true, $con, false);
     }
 } else {
-    $error = mysqli_error($con);
-    $page_content = include_template('error-layout', [
-        'error' => $error
-    ]);
-    $page_title = 'readme: ошибка!';
+    show_error(true, $con, false);
 }
 
-show_page($page_content, $page_title, $user_name);

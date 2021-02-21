@@ -102,3 +102,26 @@ function show_page($page_content, $page_name, $user_name) {
 
     print($layout_content);
 }
+
+/**
+ * Вывод страницы c ошибкой
+ *
+ * @is_err_mysql - ошибка mysqli_error или нет
+ * @err - если это ошибка mysqli_error, передаем ресурс соединения $con
+ *        если другая ошибка - передаем текст ошибки
+ * @$is_err_404 - ошибка 404 или нет (возможно, позже будут обрабатываться и другие ошибки, потому пока установку заголовка делаем через проверку этого параметра)
+ *
+ */
+
+function show_error($is_err_mysql, $err, $is_err_404) {
+    $error = $is_err_mysql ? mysqli_error($err) : $err;
+    $page_content = include_template('error-layout', [
+        'error' => $error
+    ]);
+    $page_title = 'readme: ошибка!';
+    if ($is_err_404) {
+        header("HTTP/1.1 404 Not Found");
+    }
+    show_page($page_content, $page_title, $user_name);
+    exit;
+}

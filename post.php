@@ -33,28 +33,13 @@ WHERE p.id = '$post_id'";
                 'post' => $post
             ]);
             $page_title = 'readme: пост';
+            show_page($page_content, $page_title, $user_name);
         } else {
-            $error = '404: Страница не существует';
-            $page_content = include_template('error-layout', [
-                'error' => $error
-            ]);
-            $page_title = 'readme: ошибка!';
-            header("HTTP/1.1 404 Not Found");
+            show_error(false, '404: Страница не существует', true);
         }
     } else {
-        $error = mysqli_error($con);
-        $page_content = include_template('error-layout', [
-            'error' => $error
-        ]);
-        $page_title = 'readme: ошибка!';
+        show_error(true, $con, false);
     }
 } else {
-    $error = '404: Страница не существует';
-    $page_content = include_template('error-layout', [
-        'error' => $error
-    ]);
-    $page_title = 'readme: ошибка!';
-    header("HTTP/1.1 404 Not Found");
+    show_error(false, '404: Страница не существует', true);
 }
-
-show_page($page_content, $page_title, $user_name);
