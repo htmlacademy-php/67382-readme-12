@@ -179,8 +179,8 @@
               <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($post['subscr_total'], 'подписчик', 'подписчика', 'подписчиков'); ?></span>
             </p>
             <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-              <span class="post-details__rating-amount user__rating-amount">556</span>
-              <span class="post-details__rating-text user__rating-text">публикаций</span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $user_posts_total; ?></span>
+              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($user_posts_total, 'публикация', 'публикации', 'публикаций'); ?></span>
             </p>
           </div>
           <div class="post-details__user-buttons user__buttons">

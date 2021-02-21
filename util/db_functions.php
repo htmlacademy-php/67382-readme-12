@@ -50,6 +50,7 @@ function get_post($con, $post_id) {
     u.reg_date,
     t.type_name,
     t.icon_class,
+    p.user_id,
     title,
     content,
     content_add,
@@ -70,6 +71,28 @@ WHERE p.id = '$post_id'";
             show_error(false, '404: Страница не существует', true);
         }
         return $post;
+    } else {
+        show_error(true, $con, false);
+    }
+}
+
+/**
+ * Получение из базы количества постов пользователя
+ *
+ * @con - ресурс соединения
+ * @user_id int - id пользователя
+ * @return - количество постов пользователя
+ *
+ */
+
+function count_user_posts($con, $user_id) {
+    $sql = "SELECT
+    COUNT(id) AS user_posts_total
+FROM posts
+WHERE user_id = '$user_id'";
+    if ($res = mysqli_query($con, $sql)) {
+        $posts_total = mysqli_fetch_array($res, MYSQLI_ASSOC);
+        return $posts_total['user_posts_total'];
     } else {
         show_error(true, $con, false);
     }
