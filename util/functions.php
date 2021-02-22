@@ -42,17 +42,19 @@ function cut_post($text, $num_letters  = 300) {
 const WEEK_DAYS = 7;
 const MONTHS_LIMIT = 35;
 
-function convert_date($date) {
+function convert_date($date, $reg) {
     $diff = date_diff(date_create(), date_create($date));
 
     switch (true) {
+        case ($diff->y > 0 && $reg):
+            return $diff->y . ' ' . get_noun_plural_form($diff->y, 'год', 'года', 'лет');
         case ($diff->days > MONTHS_LIMIT):
-            return $diff->m . ' ' . get_noun_plural_form($diff->m, 'месяц', 'месяца', 'месяцев') . ' назад';
+            return $diff->m . ' ' . get_noun_plural_form($diff->m, 'месяц', 'месяца', 'месяцев');
         case ($diff->days >= WEEK_DAYS):
             $dt = ceil(($diff->days)/WEEK_DAYS);
-            return $dt . ' ' . get_noun_plural_form($dt, 'неделя', 'недели', 'недель') . ' назад';
+            return $dt . ' ' . get_noun_plural_form($dt, 'неделя', 'недели', 'недель');
         case ($diff->days > 0):
-            return $diff->days . ' ' . get_noun_plural_form($diff->days, 'день', 'дня', 'дней') . ' назад';
+            return $diff->days . ' ' . get_noun_plural_form($diff->days, 'день', 'дня', 'дней');
         case ($diff->h > 0):
             return $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов') . ' назад';
         default:
@@ -81,4 +83,45 @@ function icons_sizes($icon_class) {
         case 'photo':
             return 'width="22" height="18"';
     }
+}
+
+/**
+ * Вывод страницы
+ *
+ * @page_content - содержимое страницы
+ * @page_name - заголовок страницы
+ * @user_name - пользователь
+ *
+ */
+function show_page($page_content, $page_name, $user_name) {
+    $layout_content = include_template('layout', [
+        'content' => $page_content,
+        'page_name' => $page_name,
+        'user_name' => $user_name
+    ]);
+
+    print($layout_content);
+}
+
+/**
+ * Вывод страницы c ошибкой
+ *
+ * @is_err_mysql - ошибка mysqli_error или нет
+ * @err - если это ошибка mysqli_error, передаем ресурс соединения $con
+ *        если другая ошибка - передаем текст ошибки
+ * @$is_err_404 - ошибка 404 или нет (возможно, позже будут обрабатываться и другие ошибки, потому пока установку заголовка делаем через проверку этого параметра)
+ *
+ */
+
+function show_error($is_err_mysql, $err, $is_err_404) {
+    $error = $is_err_mysql ? mysqli_error($err) : $err;
+    $page_content = include_template('error-layout', [
+        'error' => $error
+    ]);
+    $page_title = 'readme: ошибка!';
+    if ($is_err_404) {
+        header("HTTP/1.1 404 Not Found");
+    }
+    show_page($page_content, $page_title, $user_name);
+    exit;
 }
