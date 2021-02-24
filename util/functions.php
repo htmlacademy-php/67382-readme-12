@@ -56,9 +56,9 @@ function convert_date($date, $reg) {
         case ($diff->days > 0):
             return $diff->days . ' ' . get_noun_plural_form($diff->days, 'день', 'дня', 'дней');
         case ($diff->h > 0):
-            return $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов') . ' назад';
+            return $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов');
         default:
-            return $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут') . ' назад';
+            return $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут');
     }
 }
 
