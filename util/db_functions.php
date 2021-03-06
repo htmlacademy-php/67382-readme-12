@@ -4,12 +4,25 @@
  *
  * @con - ресурс соединения
  * @filters_type int - фильтр
+ * @sorting_type string - тип сортировки
+ * @sorting_order string - порядок сортировки
  * @return - популярные посты для вывода на страницу
  *
  */
 
-function get_popular_posts($con, $filters_type) {
+function get_popular_posts($con, $filters_type, $sorting_type, $sorting_order) {
     $filter_string = $filters_type ? "WHERE p.type_id = '$filters_type' " : "";
+    switch (true) {
+        case ($sorting_type === 'likes'):
+            $sorting_type_string = ' likes_total';
+            break;
+        case ($sorting_type === 'date'):
+            $sorting_type_string = ' post_date';
+            break;
+        default:
+            $sorting_type_string = ' views_total';
+    }
+    $sorting_order_string = ($sorting_order === 'asc') ? ' ASC' : ' DESC';
     $sql = "SELECT post_date,
     u.user_name,
     u.avatar,
@@ -20,13 +33,15 @@ function get_popular_posts($con, $filters_type) {
     content,
     content_add,
     link_icon,
-    views_total
+    views_total,
+    (SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS likes_total,
+    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS comments_total
 FROM posts p
 JOIN users u
     ON p.user_id = u.id
 JOIN posts_types t
     ON p.type_id = t.id " . $filter_string . "
-ORDER BY views_total DESC";
+ORDER BY " . $sorting_type_string . $sorting_order_string;
     if ($res = mysqli_query($con, $sql)) {
         return mysqli_fetch_all($res, MYSQLI_ASSOC);
     } else {
