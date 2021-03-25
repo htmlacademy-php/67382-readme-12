@@ -86,6 +86,52 @@ function icons_sizes($icon_class) {
 }
 
 /**
+ * Возвращает тип поста для подстановки в заголовок формы добавления поста
+ *
+ * @param string $post_type_id - тип поста
+ * @return string строка для заголовка
+ *
+ */
+
+function types_in_heading($post_type_id) {
+    switch ($post_type_id) {
+        case 2:
+            return 'цитаты';
+        case 1:
+            return 'текста';
+        case 5:
+            return 'ссылки';
+        case 4:
+            return 'видео';
+        case 3:
+            return 'фото';
+    }
+}
+
+/**
+ * Возвращает текст тэга label для подстановки в форму добавления поста
+ *
+ * @param string $post_type_id - тип поста
+ * @return string текст тэга label
+ *
+ */
+
+function text_in_label($post_type_id) {
+    switch ($post_type_id) {
+        case 2:
+            return 'Текст цитаты ';
+        case 1:
+            return 'Текст поста ';
+        case 5:
+            return 'Ссылка ';
+        case 4:
+            return 'Ссылка youtube ';
+        case 3:
+            return 'Ссылка из интернета';
+    }
+}
+
+/**
  * Вывод страницы
  *
  * @page_content - содержимое страницы

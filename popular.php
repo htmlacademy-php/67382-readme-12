@@ -35,4 +35,3 @@ if ($res = mysqli_query($con, $sql)) {
 } else {
     show_error(true, $con, false);
 }
-
