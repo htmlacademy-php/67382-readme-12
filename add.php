@@ -12,12 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($res = mysqli_query($con, $sql)) {
         $posts_types = mysqli_fetch_all($res, MYSQLI_ASSOC);
-        $filters_type = (int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-        if (!in_array($filters_type, array_column($posts_types, 'id'))) {
-            $filters_type = 1;
+        $post_type_id = (int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+        if (!in_array($post_type_id, array_column($posts_types, 'id'))) {
+            $post_type_id = 1;
         }
         $page_content = include_template('adding-post', [
-            'posts_types' => $posts_types, 'filters_type' => $filters_type
+            'posts_types' => $posts_types, 'post_type_id' => $post_type_id
         ]);
         $page_title = 'readme: добавить пост';
         show_page($page_content, $page_title, $user_name);

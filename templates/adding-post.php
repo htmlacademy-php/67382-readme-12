@@ -11,7 +11,7 @@
             <?php if ($posts_types): ?>
                 <?php foreach ($posts_types as $post_type): ?>
                 <li class="adding-post__tabs-item filters__item">
-                    <a class="adding-post__tabs-link filters__button filters__button--<?= $post_type['icon_class']; ?><?=((int) $post_type['id'] === $filters_type) ? ' filters__button--active' : ''; ?> tabs__item <?=((int) $post_type['id'] === $filters_type) ? ' tabs__item--active' : ''; ?> button" href="add.php?id=<?= $post_type['id']; ?>">
+                    <a class="adding-post__tabs-link filters__button filters__button--<?= $post_type['icon_class']; ?><?=((int) $post_type['id'] === $post_type_id) ? ' filters__button--active' : ''; ?> tabs__item <?=((int) $post_type['id'] === $post_type_id) ? ' tabs__item--active' : ''; ?> button" href="add.php?id=<?= $post_type['id']; ?>">
                         <svg class="filters__icon" <?= icons_sizes($post_type['icon_class']); ?>>
                             <use xlink:href="#icon-filter-<?= $post_type['icon_class']; ?>"></use>
                         </svg>
@@ -23,9 +23,9 @@
             </ul>
         </div>
         <div class="adding-post__tab-content">
-            <section class="adding-post__<?= $posts_types[$filters_type]['icon_class']; ?> tabs__content tabs__content--active">
-                <h2 class="visually-hidden">Форма добавления <?= types_in_heading($filters_type); ?></h2>
-                <form class="adding-post__form form" action="add.php" method="post"<?=($filters_type === 3) ? ' enctype="multipart/form-data"' : ''; ?>>
+            <section class="adding-post__<?= $posts_types[$post_type_id]['icon_class']; ?> tabs__content tabs__content--active">
+                <h2 class="visually-hidden">Форма добавления <?= types_in_heading($post_type_id); ?></h2>
+                <form class="adding-post__form form" action="add.php" method="post"<?=($post_type_id === 3) ? ' enctype="multipart/form-data"' : ''; ?>>
                     <div class="form__text-inputs-wrapper">
                         <div class="form__text-inputs">
                             <div class="adding-post__input-wrapper form__input-wrapper">
@@ -40,14 +40,14 @@
                                 </div>
                             </div>
 
-                            <?php if ($filters_type < 3): ?>
+                            <?php if ($post_type_id < 3): ?>
                             <div class="adding-post__textarea-wrapper form__textarea-wrapper">
-                                <label class="adding-post__label form__label" for="post-text"><?= text_in_label($filters_type); ?><span class="form__input-required">*</span></label>
+                                <label class="adding-post__label form__label" for="post-text"><?= text_in_label($post_type_id); ?><span class="form__input-required">*</span></label>
                                 <div class="form__input-section">
-                                    <textarea class="adding-post__textarea<?=($filters_type === 2) ? ' adding-post__textarea--quote' : ''; ?> form__textarea form__input" id="post-text" name="post-text" placeholder="<?=($filters_type === 2) ? 'Текст цитаты' : 'Введите текст публикации'; ?>"></textarea>
+                                    <textarea class="adding-post__textarea<?=($post_type_id === 2) ? ' adding-post__textarea--quote' : ''; ?> form__textarea form__input" id="post-text" name="post-text" placeholder="<?=($post_type_id === 2) ? 'Текст цитаты' : 'Введите текст публикации'; ?>"></textarea>
                             <?php else: ?>
                             <div class="adding-post__input-wrapper form__input-wrapper">
-                                <label class="adding-post__label form__label" for="post-url"><?= text_in_label($filters_type); ?><?=($filters_type !== 3) ? '<span class="form__input-required">*</span>' : ''; ?></label>
+                                <label class="adding-post__label form__label" for="post-url"><?= text_in_label($post_type_id); ?><?=($post_type_id !== 3) ? '<span class="form__input-required">*</span>' : ''; ?></label>
                                 <div class="form__input-section">
                                     <input class="adding-post__input form__input" id="post-url" type="text" name="post-url" placeholder="Введите ссылку">
                             <?php endif; ?>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
 
-                            <?php if ($filters_type === 2): ?>
+                            <?php if ($post_type_id === 2): ?>
                             <div class="adding-post__textarea-wrapper form__input-wrapper">
                             <label class="adding-post__label form__label" for="quote-author">Автор <span class="form__input-required">*</span></label>
                             <div class="form__input-section">
@@ -96,7 +96,7 @@
 
                     </div>
 
-                    <?php if ($filters_type === 3): ?>
+                    <?php if ($post_type_id === 3): ?>
                     <div class="adding-post__input-file-container form__input-container form__input-container--file">
                         <div class="adding-post__input-file-wrapper form__input-file-wrapper">
                             <div class="adding-post__file-zone adding-post__file-zone--photo form__file-zone dropzone">
