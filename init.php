@@ -12,3 +12,10 @@ if (!$con) {
     exit;
 }
 mysqli_set_charset($con, 'utf8');
+$sql = "SELECT * FROM posts_types";
+if ($res = mysqli_query($con, $sql)) {
+    $posts_types = mysqli_fetch_all($res, MYSQLI_ASSOC);
+} else {
+    show_error(true, $con, false);
+    exit;
+}
