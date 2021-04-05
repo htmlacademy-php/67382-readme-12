@@ -26,6 +26,7 @@
             <section class="adding-post__<?= $posts_types[$post_type_id]['icon_class']; ?> tabs__content tabs__content--active">
                 <h2 class="visually-hidden">Форма добавления <?= types_in_heading($post_type_id); ?></h2>
                 <form class="adding-post__form form" action="add.php" method="post"<?=($post_type_id === 3) ? ' enctype="multipart/form-data"' : ''; ?>>
+                    <input type="hidden" name="post_type_id" value="<?= $post_type_id; ?>" id="post_type_id">
                     <div class="form__text-inputs-wrapper">
                         <div class="form__text-inputs">
                             <div class="adding-post__input-wrapper form__input-wrapper">
@@ -61,9 +62,9 @@
 
                             <?php if ($post_type_id === 2): ?>
                             <div class="adding-post__textarea-wrapper form__input-wrapper">
-                            <label class="adding-post__label form__label" for="quote-author">Автор <span class="form__input-required">*</span></label>
+                            <label class="adding-post__label form__label" for="cite-author">Автор <span class="form__input-required">*</span></label>
                             <div class="form__input-section">
-                                <input class="adding-post__input form__input" id="quote-author" type="text" name="quote-author">
+                                <input class="adding-post__input form__input" id="cite-author" type="text" name="cite-author">
                                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                 <div class="form__error-text">
                                 <h3 class="form__error-title">Заголовок сообщения</h3>

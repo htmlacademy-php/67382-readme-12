@@ -11,7 +11,7 @@
                 case 'quote': ?>
                     <blockquote>
                         <p><?= htmlspecialchars($post['content']); ?></p>
-                        <cite><?= ($post['content_add']) ? htmlspecialchars($post['content_add']) : 'Неизвестный Автор'; ?></cite>
+                        <cite><?= ($post['cite_author']) ? htmlspecialchars($post['cite_author']) : 'Неизвестный Автор'; ?></cite>
                     </blockquote>
                     <?php break;
                 case 'text': ?>
@@ -19,16 +19,16 @@
                     <?php break;
                 case 'link': ?>
                     <div class="post-link__wrapper">
-                        <a class="post-link__external" href="http://<?= strip_tags($post['content_add']); ?>" title="Перейти по ссылке">
+                        <a class="post-link__external" href="http://<?= strip_tags($post['content']); ?>" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
                                 <div class="post-link__icon-wrapper">
-                                    <img src="img/<?= strip_tags($post['link_icon']); ?>" alt="Иконка">
+                                    <img src="https://www.google.com/s2/favicons?domain=<?= strip_tags($post['content']); ?>" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
                                     <h3><?= htmlspecialchars($post['title']); ?></h3>
                                 </div>
                             </div>
-                            <span><?= strip_tags($post['content_add']); ?></span>
+                            <span><?= strip_tags($post['content']); ?></span>
                         </a>
                     </div>
                     <?php break;
@@ -48,7 +48,7 @@
                     <?php break;
                 case 'photo': ?>
                     <div class="post-photo__image-wrapper">
-                        <img src="img/<?= strip_tags($post['content']); ?>" alt="Фото от пользователя" width="360" height="240">
+                        <img src="uploads/<?= strip_tags($post['content']); ?>" alt="Фото от пользователя" width="360" height="240">
                     </div>
                     <?php break;
             endswitch; ?>
