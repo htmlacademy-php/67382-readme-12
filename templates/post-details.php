@@ -38,8 +38,7 @@
             case 'video': ?>
                 <div class="post-video__block">
                     <div class="post-video__preview">
-                      <?= embed_youtube_cover(/* вставьте ссылку на видео */); ?>
-                      <img src="img/coast.jpg" alt="Превью к видео" width="760" height="396">
+                      <?= embed_youtube_cover($post['content'], '760', '396'); ?>
                     </div>
                     <div class="post-video__control">
                       <button class="post-video__play post-video__play--paused button button--video" type="button"><span class="visually-hidden">Запустить видео</span></button>

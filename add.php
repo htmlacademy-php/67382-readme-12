@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $check_url = strip_tags($_POST['post-url']);
         $video_url = filter_var($check_url, FILTER_VALIDATE_URL);
         if ($video_url) {
-            if (check_youtube_url($url)) {
+            if (check_youtube_url($video_url)) {
                 $new_post['content'] = $video_url;
             } else {
                 $errors['video'] = 'Видео по такой ссылке не найдено. Проверьте ссылку на видео';
