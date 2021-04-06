@@ -57,7 +57,7 @@
                 <div class="post__author">
                     <a class="post__author-link" href="#" title="Автор">
                         <div class="post__avatar-wrapper">
-                            <img class="post__author-avatar" src="img/<?= isset($post['avatar']) ? strip_tags($post['avatar']) : 'icon-input-user.svg'; ?>" alt="Аватар пользователя">
+                            <img class="post__author-avatar" src="img/<?= isset($post['avatar']) ? strip_tags($post['avatar']) : 'icon-input-user.svg'; ?>" alt="Аватар пользователя" style="max-width: 40px!important;max-height: 40px!important;">
                         </div>
                         <div class="post__info">
                             <b class="post__author-name"><?= isset($post['user_name']) ? htmlspecialchars($post['user_name']) : 'Неопознанный Енот'; ?></b>

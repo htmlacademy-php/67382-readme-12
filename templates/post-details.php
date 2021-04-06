@@ -22,9 +22,9 @@
                 <?php break;
             case 'link': ?>
                 <div class="post-link__wrapper">
-                    <a class="post-link__external" href="http://<?= strip_tags($post['content']); ?>" title="Перейти по ссылке">
+                    <a class="post-link__external" href="http://<?= strip_tags($post['content']); ?>" title="Перейти по ссылке" style="align-items: center!important;">
                         <div class="post-link__icon-wrapper">
-                            <img src="https://www.google.com/s2/favicons?domain=<?= strip_tags($post['content']); ?>" alt="Иконка">
+                            <img src="https://www.google.com/s2/favicons?domain=<?= strip_tags($post['content']); ?>" alt="Иконка" style="min-width: 48px!important;">
                         </div>
                         <div class="post-link__info">
                             <span><?= strip_tags($post['content']); ?></span>
