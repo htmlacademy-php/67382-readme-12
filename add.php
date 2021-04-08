@@ -16,7 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
     $new_post['type_id'] = (int) $_POST['post_type_id'];
     $new_post['title'] = htmlspecialchars($_POST['post-heading']);
-    $required = ['title', 'content'];
+    $required = ['title'];
+    if ($new_post['type_id'] !== 3) {
+        array_push($required, 'content');
+    }
     if ($new_post['type_id'] < 3) {
         $new_post['content'] = htmlspecialchars($_POST['post-text']);
     } else if ($new_post['type_id'] > 3) {
@@ -24,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($new_post['type_id'] === 3) {
+        $new_post['content'] = '';
 
         if ($_FILES['file-photo']['size'] > 0) {
             $tmp_name = $_FILES['file-photo']['tmp_name'];
@@ -44,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $photo_file = @file_get_contents($photo_url);
                 if ($photo_file) {
                     $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                    $file_type = finfo_file($finfo, $photo_file);
+                    $file_type = finfo_buffer($finfo, $photo_file);
                     if (($file_type !== "image/jpeg") && ($file_type !== "image/gif") && ($file_type !== "image/png")) {
                         $errors['photo'] = 'По ссылке отсутствует изображение в формате jpeg, png или gif';
                     } else {
@@ -110,11 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         if ($new_post['type_id'] === 3) {
             if ($isPhotoAtLink) {
-                $img_path = 'uploads/' . basename($photo_url);
-                file_put_contents($img_path, $photo_file);
+                $img_path = basename($photo_url);
+                file_put_contents('uploads/' . $img_path, $photo_file);
             } else {
-                $img_path = 'uploads/' . $_FILES['file-photo']['name'];
-                move_uploaded_file($_FILES['file-photo']['tmp_name'], $img_path);
+                $img_path = $_FILES['file-photo']['name'];
+                move_uploaded_file($_FILES['file-photo']['tmp_name'], 'uploads/' . $img_path);
             }
             $new_post['content'] = $img_path;
         }
