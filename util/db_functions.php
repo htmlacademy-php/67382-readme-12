@@ -117,13 +117,17 @@ function add_new_post($con, $new_post, $post_tags) {
                     if ($res_tag_add = mysqli_query($con, $sql)) {
                         $tag_id = mysqli_insert_id($con);
                     } else {
-                        show_error(true, $con, false);
+                        continue;
+                        // - ошибки добавления тэгов не будут выводиться на страницу ошибок
+                        // - если пост успешно добавлен, он будет показан без тэгов
+                        // - show_error(true, $con, false);
                     }
                 }
                 $sql = "INSERT INTO post_tags SET post_id = '$new_post_id', tag_id = '$tag_id'";
                 $res_post_tags = mysqli_query($con, $sql);
                 if (!$res_post_tags) {
-                    show_error(true, $con, false);
+                    continue;
+                    // - show_error(true, $con, false);
                 }
             }
         }
