@@ -132,6 +132,64 @@ function text_in_label($post_type_id) {
 }
 
 /**
+ * Возвращает текст заголовка ошибки для подстановки в форму добавления поста
+ *
+ * @param string $post_type_id - тип поста
+ * @return string текст заголовка ошибки
+ *
+ */
+
+function content_error_title($post_type_id) {
+    switch ($post_type_id) {
+        case 2:
+            return 'Текст цитаты';
+        case 1:
+            return 'Текст поста';
+        case 5:
+            return 'Ссылка';
+        case 4:
+            return 'Ссылка youtube ';
+        case 3:
+            return 'Ссылка на фото';
+    }
+}
+
+/**
+ * Возвращает текст названия поля перед текстом ошибки в сайдбаре
+ *
+ * @param string $key - поле с ошибкой
+ * @param string $post_type_id - тип поста
+ * @return string текст заголовка ошибки
+ *
+ */
+
+function sidebar_error_title($key, $post_type_id) {
+    switch ($key) {
+        case 'title':
+            return 'Заголовок. ';
+        case 'cite_author':
+            return 'Автор. ';
+        case 'tags':
+            return 'Теги. ';
+        case 'photo':
+            return 'Файл с фото. ';
+        case 'content':
+            switch ($post_type_id) {
+                case 2:
+                    return 'Цитата. ';
+                case 1:
+                    return 'Текст поста. ';
+                case 5:
+                    return 'Ссылка. ';
+                case 4:
+                    return 'Ссылка youtube. ';
+                case 3:
+                    return 'Ссылка на фото. ';
+        }
+    }
+}
+
+/**
  * Вывод страницы
  *
  * @page_content - содержимое страницы

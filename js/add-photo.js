@@ -4,21 +4,18 @@
     var previewArea = document.querySelector('.js-preview');
     var dropArea = document.querySelector('.js-dropzone');
     var currentFile = document.querySelector('.js-preview-img');
+    var errorWrap = document.querySelector('.js-file-error');
     if (!currentFile) {
       currentFile = false;
     }
     var queue = [];
     var file;
     var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+    var isError = false;
 
     fileChooser.addEventListener('change', function () {
       file = this.files[0];
-      var matches = FILE_TYPES.some(function (it) {
-        return file.name.endsWith(it);
-      });
-      if (matches) {
-        previewFile(file);
-      }
+      processFile(file);
     });
 
     dropArea.addEventListener('dragover', function(evt) {
@@ -31,12 +28,7 @@
       evt.stopPropagation();
       evt.preventDefault();
       file = evt.dataTransfer.files[0];
-      var matches = FILE_TYPES.some(function (it) {
-        return file.name.endsWith(it);
-      });
-      if (matches) {
-        previewFile(file);
-      }
+      processFile(file);
     }, false);
 
     function previewFile(file) {
@@ -91,6 +83,35 @@
       });
       filePreview.parentNode.removeChild(filePreview);
       currentFile = false;
+    }
+
+    function setError() {
+      isError = true;
+      errorWrap.classList.add('form__input-section--error');
+      errorWrap.setAttribute('style', 'border: 2px solid #f02323!important;border-radius: 10px!important;');
+      errorWrap.querySelector('.form__error-desc').textContent = 'Загрузите изображение в формате jpeg, png или gif';
+    }
+
+    function removeError() {
+      isError = false;
+      errorWrap.classList.remove('form__input-section--error');
+      errorWrap.removeAttribute('style');
+    }
+
+    function processFile(file) {
+      var matches = FILE_TYPES.some(function (it) {
+        return file.name.endsWith(it);
+      });
+      if (matches) {
+        if (isError) {
+          removeError();
+        }
+        previewFile(file);
+      } else {
+        if (!isError) {
+          setError();
+        }
+      }
     }
   }
 

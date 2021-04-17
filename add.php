@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_post = [];
     $errors = [];
     $new_post['type_id'] = (int) $_POST['post_type_id'];
+    $post_type_id = $new_post['type_id'];
     $new_post['title'] = htmlspecialchars($_POST['post-heading']);
     $required = ['title'];
     if ($new_post['type_id'] !== 3) {
@@ -50,14 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $finfo = finfo_open(FILEINFO_MIME_TYPE);
                     $file_type = finfo_buffer($finfo, $photo_file);
                     if (($file_type !== "image/jpeg") && ($file_type !== "image/gif") && ($file_type !== "image/png")) {
-                        $errors['photo'] = 'По ссылке отсутствует изображение в формате jpeg, png или gif';
+                        $errors['content'] = 'По ссылке отсутствует изображение в формате jpeg, png или gif';
                     } else {
                         $isPhotoAtLink = true;
                     }
                 } else {
-                    $errors['photo'] = 'Невозможно загрузить изображение по ссылке';
+                    $errors['content'] = 'Невозможно загрузить изображение по ссылке';
                 }
             } else {
+                $errors['content'] = 'Загрузите изображение или укажите ссылку на него';
                 $errors['photo'] = 'Загрузите изображение или укажите ссылку на него';
             }
         }
@@ -71,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (($new_post['type_id'] === 2) && (strlen($new_post['content']) > 70))  {
-        $errors['cite-length'] = 'Цитата не должна превышать 70 знаков.';
+        $errors['content'] = 'Цитата не должна превышать 70 знаков.';
     }
-    $post_tags = ($_POST['post-tags']) ? explode(' ',  htmlspecialchars($_POST['post-tags'])) : false;
+    $post_tags = ($_POST['post-tags']) ? explode(' ', htmlspecialchars($_POST['post-tags'])) : false;
 
     if ($new_post['type_id'] === 4) {
         $check_url = strip_tags($_POST['post-url']);
@@ -82,10 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (check_youtube_url($video_url)) {
                 $new_post['content'] = $video_url;
             } else {
-                $errors['video'] = 'Видео по такой ссылке не найдено. Проверьте ссылку на видео';
+                $errors['content'] = 'Видео по такой ссылке не найдено. Проверьте ссылку на видео';
             }
         } else {
-            $errors['video'] = 'Укажите ссылку на видео на YouTube';
+            $errors['content'] = 'Укажите ссылку на видео на YouTube';
         }
     }
 
@@ -95,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($link_url) {
             $new_post['content'] = $link_url;
         } else {
-            $errors['link'] = 'Текст в поле не является ссылкой';
+            $errors['content'] = 'Текст в поле не является ссылкой';
         }
     }
 
@@ -106,11 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (count($errors)) {
-
-
-
-
-
+        $new_post['tags'] = htmlspecialchars($_POST['post-tags']);
+        $page_content = include_template('adding-post', [
+            'posts_types' => $posts_types, 'post_type_id' => $post_type_id, 'errors' => $errors, 'previous_values' => $new_post
+        ]);
     } else {
         if ($new_post['type_id'] === 3) {
             if ($isPhotoAtLink) {
@@ -128,12 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: post.php?id=" . $new_post_id);
         exit();
     }
+} else {
+    $page_content = include_template('adding-post', [
+        'posts_types' => $posts_types, 'post_type_id' => $post_type_id
+    ]);
 }
 
-$page_content = include_template('adding-post', [
-    'posts_types' => $posts_types, 'post_type_id' => $post_type_id
-]);
 $page_title = 'readme: добавить пост';
 show_page($page_content, $page_title, $user_name);
-
-
