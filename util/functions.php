@@ -56,9 +56,9 @@ function convert_date($date, $reg) {
         case ($diff->days > 0):
             return $diff->days . ' ' . get_noun_plural_form($diff->days, 'день', 'дня', 'дней');
         case ($diff->h > 0):
-            return $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов') . ' назад';
+            return $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов');
         default:
-            return $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут') . ' назад';
+            return $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут');
     }
 }
 
@@ -82,6 +82,110 @@ function icons_sizes($icon_class) {
             return 'width="24" height="16"';
         case 'photo':
             return 'width="22" height="18"';
+    }
+}
+
+/**
+ * Возвращает тип поста для подстановки в заголовок формы добавления поста
+ *
+ * @param string $post_type_id - тип поста
+ * @return string строка для заголовка
+ *
+ */
+
+function types_in_heading($post_type_id) {
+    switch ($post_type_id) {
+        case 2:
+            return 'цитаты';
+        case 1:
+            return 'текста';
+        case 5:
+            return 'ссылки';
+        case 4:
+            return 'видео';
+        case 3:
+            return 'фото';
+    }
+}
+
+/**
+ * Возвращает текст тэга label для подстановки в форму добавления поста
+ *
+ * @param string $post_type_id - тип поста
+ * @return string текст тэга label
+ *
+ */
+
+function text_in_label($post_type_id) {
+    switch ($post_type_id) {
+        case 2:
+            return 'Текст цитаты ';
+        case 1:
+            return 'Текст поста ';
+        case 5:
+            return 'Ссылка ';
+        case 4:
+            return 'Ссылка youtube ';
+        case 3:
+            return 'Ссылка из интернета';
+    }
+}
+
+/**
+ * Возвращает текст заголовка ошибки для подстановки в форму добавления поста
+ *
+ * @param string $post_type_id - тип поста
+ * @return string текст заголовка ошибки
+ *
+ */
+
+function content_error_title($post_type_id) {
+    switch ($post_type_id) {
+        case 2:
+            return 'Текст цитаты';
+        case 1:
+            return 'Текст поста';
+        case 5:
+            return 'Ссылка';
+        case 4:
+            return 'Ссылка youtube ';
+        case 3:
+            return 'Ссылка на фото';
+    }
+}
+
+/**
+ * Возвращает текст названия поля перед текстом ошибки в сайдбаре
+ *
+ * @param string $key - поле с ошибкой
+ * @param string $post_type_id - тип поста
+ * @return string текст заголовка ошибки
+ *
+ */
+
+function sidebar_error_title($key, $post_type_id) {
+    switch ($key) {
+        case 'title':
+            return 'Заголовок. ';
+        case 'cite_author':
+            return 'Автор. ';
+        case 'tags':
+            return 'Теги. ';
+        case 'photo':
+            return 'Файл с фото. ';
+        case 'content':
+            switch ($post_type_id) {
+                case 2:
+                    return 'Цитата. ';
+                case 1:
+                    return 'Текст поста. ';
+                case 5:
+                    return 'Ссылка. ';
+                case 4:
+                    return 'Ссылка youtube. ';
+                case 3:
+                    return 'Ссылка на фото. ';
+        }
     }
 }
 

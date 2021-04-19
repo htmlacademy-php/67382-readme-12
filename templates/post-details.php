@@ -11,7 +11,7 @@
                 <div class="post__main">
                     <blockquote>
                         <p><?= htmlspecialchars($post['content']); ?></p>
-                        <cite><?= ($post['content_add']) ? htmlspecialchars($post['content_add']) : 'Неизвестный Автор'; ?></cite>
+                        <cite><?= ($post['cite_author']) ? htmlspecialchars($post['cite_author']) : 'Неизвестный Автор'; ?></cite>
                     </blockquote>
                 </div>
                 <?php break;
@@ -22,13 +22,12 @@
                 <?php break;
             case 'link': ?>
                 <div class="post-link__wrapper">
-                    <a class="post-link__external" href="http://<?= strip_tags($post['content_add']); ?>" title="Перейти по ссылке">
+                    <a class="post-link__external" href="http://<?= strip_tags($post['content']); ?>" title="Перейти по ссылке" style="align-items: center!important;">
                         <div class="post-link__icon-wrapper">
-                            <img src="img/<?= strip_tags($post['link_icon']); ?>" alt="Иконка">
+                            <img src="https://www.google.com/s2/favicons?domain=<?= strip_tags($post['content']); ?>" alt="Иконка" style="min-width: 48px!important;">
                         </div>
                         <div class="post-link__info">
-                            <p><?= htmlspecialchars($post['content']); ?></p>
-                            <span><?= strip_tags($post['content_add']); ?></span>
+                            <span><?= strip_tags($post['content']); ?></span>
                         </div>
                         <svg class="post-link__arrow" width="11" height="16">
                             <use xlink:href="#icon-arrow-right-ad"></use>
@@ -39,8 +38,7 @@
             case 'video': ?>
                 <div class="post-video__block">
                     <div class="post-video__preview">
-                      <?= embed_youtube_cover(/* вставьте ссылку на видео */); ?>
-                      <img src="img/coast.jpg" alt="Превью к видео" width="760" height="396">
+                      <?= embed_youtube_cover($post['content'], '760', '396'); ?>
                     </div>
                     <div class="post-video__control">
                       <button class="post-video__play post-video__play--paused button button--video" type="button"><span class="visually-hidden">Запустить видео</span></button>
@@ -63,7 +61,7 @@
                 <?php break;
             case 'photo': ?>
                     <div class="post-details__image-wrapper post-photo__image-wrapper">
-                        <img src="img/<?= strip_tags($post['content']); ?>" alt="Фото от пользователя" width="760" height="507">
+                        <img src="uploads/<?= strip_tags($post['content']); ?>" alt="Фото от пользователя" width="760" height="507">
                     </div>
                     <?php break;
             endswitch; ?>
