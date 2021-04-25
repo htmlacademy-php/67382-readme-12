@@ -1,13 +1,13 @@
 <?php if ($popular_posts): ?>
     <?php foreach ($popular_posts as $post): ?>
-        <article class="popular__post post post-<?= $post['icon_class']; ?>">
+        <article class="popular__post post post-<?= $post['alias']; ?>">
             <header class="post__header">
-                <a href="post.php?id=<?= $post['id']; ?>">
+                <a href="post.php?post_id=<?= $post['id']; ?>">
                     <h2><?= htmlspecialchars($post['title']); ?></h2>
                 </a>
             </header>
             <div class="post__main">
-            <?php switch ($post['icon_class']):
+            <?php switch ($post['alias']):
                 case 'quote': ?>
                     <blockquote>
                         <p><?= htmlspecialchars($post['content']); ?></p>
@@ -37,7 +37,7 @@
                         <div class="post-video__preview">
                             <?= embed_youtube_cover($post['content'], '360', '188'); ?>
                         </div>
-                        <a href="post.php?id=<?= $post['id']; ?>" class="post-video__play-big button">
+                        <a href="post.php?post_id=<?= $post['id']; ?>" class="post-video__play-big button">
                             <svg class="post-video__play-big-icon" width="14" height="14">
                                 <use xlink:href="#icon-video-play-big"></use>
                             </svg>

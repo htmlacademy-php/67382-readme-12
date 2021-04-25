@@ -1,11 +1,11 @@
 USE readme;
 
 -- типы постов
-INSERT INTO posts_types SET type_name = 'Текст', icon_class='text';
-INSERT INTO posts_types SET type_name = 'Цитата', icon_class='quote';
-INSERT INTO posts_types SET type_name = 'Фото', icon_class='photo';
-INSERT INTO posts_types SET type_name = 'Видео', icon_class='video';
-INSERT INTO posts_types SET type_name = 'Ссылка', icon_class='link';
+INSERT INTO posts_types SET type_name = 'Текст', alias='text';
+INSERT INTO posts_types SET type_name = 'Цитата', alias='quote';
+INSERT INTO posts_types SET type_name = 'Фото', alias='photo';
+INSERT INTO posts_types SET type_name = 'Видео', alias='video';
+INSERT INTO posts_types SET type_name = 'Ссылка', alias='link';
 
 -- пользователи
 INSERT INTO users SET reg_date = '2019-01-15 15:06:18', email = 'larisa@mail.hru', user_name='Лариса', password='$2y$10$AMILwFU.wcAHUMSv3Mc/MuZMdrAKTTj2HwebHNZ2FuRvy1zyH.xzK', avatar='userpic-larisa-small.jpg';

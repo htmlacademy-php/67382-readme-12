@@ -11,9 +11,9 @@
             <?php if ($posts_types): ?>
                 <?php foreach ($posts_types as $post_type): ?>
                 <li class="adding-post__tabs-item filters__item">
-                    <a class="adding-post__tabs-link filters__button filters__button--<?= $post_type['icon_class']; ?><?=((int) $post_type['id'] === $post_type_id) ? ' filters__button--active' : ''; ?> tabs__item <?=((int) $post_type['id'] === $post_type_id) ? ' tabs__item--active' : ''; ?> button" href="add.php?id=<?= $post_type['id']; ?>">
-                        <svg class="filters__icon" <?= icons_sizes($post_type['icon_class']); ?>>
-                            <use xlink:href="#icon-filter-<?= $post_type['icon_class']; ?>"></use>
+                    <a class="adding-post__tabs-link filters__button filters__button--<?= $post_type['alias']; ?><?=((int) $post_type['id'] === $post_type_id) ? ' filters__button--active' : ''; ?> tabs__item <?=((int) $post_type['id'] === $post_type_id) ? ' tabs__item--active' : ''; ?> button" href="add.php?type_id=<?= $post_type['id']; ?>">
+                        <svg class="filters__icon" <?= icons_sizes($post_type['alias']); ?>>
+                            <use xlink:href="#icon-filter-<?= $post_type['alias']; ?>"></use>
                         </svg>
                         <span><?= $post_type['type_name']; ?></span>
                     </a>
@@ -23,9 +23,9 @@
             </ul>
         </div>
         <div class="adding-post__tab-content">
-            <section class="adding-post__<?= $posts_types[$post_type_id]['icon_class']; ?> tabs__content tabs__content--active">
+            <section class="adding-post__<?= $posts_types[$post_type_id]['alias']; ?> tabs__content tabs__content--active">
                 <h2 class="visually-hidden">Форма добавления <?= types_in_heading($post_type_id); ?></h2>
-                <form class="adding-post__form form" action="add.php?id=<?= $post_type_id; ?>" method="post"<?=($post_type_id === 3) ? ' enctype="multipart/form-data"' : ''; ?>>
+                <form class="adding-post__form form" action="add.php?type_id=<?= $post_type_id; ?>" method="post"<?=($post_type_id === 3) ? ' enctype="multipart/form-data"' : ''; ?>>
                     <input type="hidden" name="post_type_id" value="<?= $post_type_id; ?>" id="post_type_id">
                     <div class="form__text-inputs-wrapper">
                         <div class="form__text-inputs">

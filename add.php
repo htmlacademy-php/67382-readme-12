@@ -5,12 +5,12 @@ require_once 'util/functions.php';
 require_once 'util/db_functions.php';
 require_once 'init.php';
 
-$post_type_id = (int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+$post_type_id = (int) filter_input(INPUT_GET, 'type_id', FILTER_SANITIZE_NUMBER_INT);
 if (!in_array($post_type_id, array_column($posts_types, 'id'))) {
     $post_type_id = 1;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $new_post = [];
     $errors = [];
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
 
-            if (($file_type !== "image/jpeg") && ($file_type !== "image/gif") && ($file_type !== "image/png")) {
+            if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
                 $errors['photo'] = 'Загрузите изображение в формате jpeg, png или gif';
             } else {
                 $isPhotoAtLink = false;
@@ -46,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $check_url = strip_tags($_POST['post-url']);
             $photo_url = filter_var($check_url, FILTER_VALIDATE_URL);
             if ($photo_url) {
-                $photo_file = @file_get_contents($photo_url);
+                $photo_file = file_get_contents($photo_url);
                 if ($photo_file) {
                     $finfo = finfo_open(FILEINFO_MIME_TYPE);
                     $file_type = finfo_buffer($finfo, $photo_file);
-                    if (($file_type !== "image/jpeg") && ($file_type !== "image/gif") && ($file_type !== "image/png")) {
+                    if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
                         $errors['content'] = 'По ссылке отсутствует изображение в формате jpeg, png или gif';
                     } else {
                         $isPhotoAtLink = true;
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $new_post['user_id'] = 4;
         $new_post['is_repost'] = 0;
         $new_post_id = add_new_post($con, $new_post, $post_tags);
-        header("Location: post.php?id=" . $new_post_id);
+        header("Location: post.php?post_id=" . $new_post_id);
         exit();
     }
 } else {

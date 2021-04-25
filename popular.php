@@ -7,8 +7,7 @@ require_once 'init.php';
 
 const SORTING_TYPES = ['views', 'likes', 'date'];
 
-$posts_types = mysqli_fetch_all($res, MYSQLI_ASSOC);
-$filters_type = (int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+$filters_type = (int) filter_input(INPUT_GET, 'type_id', FILTER_SANITIZE_NUMBER_INT);
 $sorting_type = filter_input(INPUT_GET, 'sorting', FILTER_SANITIZE_STRING);
 $sorting_order = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_STRING);
 if (!in_array($filters_type, array_column($posts_types, 'id'))) {
