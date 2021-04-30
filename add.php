@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($new_post['type_id'] < 3) {
         $new_post['content'] = $_POST['post-text'];
     } else if ($new_post['type_id'] > 3) {
-        $new_post['content'] = strip_tags($_POST['post-url']);
+        $check_url = make_link($_POST['post-url']);
+        $new_post['content'] = $check_url;
     }
 
     if ($new_post['type_id'] === 3) {
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $isPhotoAtLink = false;
             }
         } else {
-            $check_url = strip_tags($_POST['post-url']);
+            $check_url = make_link($_POST['post-url']);
             $photo_url = filter_var($check_url, FILTER_VALIDATE_URL);
             if ($photo_url) {
                 $photo_file = file_get_contents($photo_url);
@@ -78,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $post_tags = ($_POST['post-tags']) ? explode(' ', strip_tags($_POST['post-tags'])) : false;
 
     if ($new_post['type_id'] === 4) {
-        $check_url = strip_tags($_POST['post-url']);
         $video_url = filter_var($check_url, FILTER_VALIDATE_URL);
         if ($video_url) {
             if (check_youtube_url($video_url)) {
@@ -92,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($new_post['type_id'] === 5) {
-        $check_url = strip_tags($_POST['post-url']);
         $link_url = filter_var($check_url, FILTER_VALIDATE_URL);
         if ($link_url) {
             $new_post['content'] = $link_url;

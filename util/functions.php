@@ -207,6 +207,14 @@ function show_page($page_content, $page_name, $user_name) {
     print($layout_content);
 }
 
+function make_link($url_string) {
+    $check_url = strip_tags($url_string);
+    if (!(stripos($check_url, 'http://') === 0 || stripos($check_url, 'https://') === 0)) {
+        $check_url = 'http://' . $check_url;
+    }
+    return $check_url;
+}
+
 /**
  * Вывод страницы c ошибкой
  *
