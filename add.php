@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
     $new_post['type_id'] = (int) $_POST['post_type_id'];
     $post_type_id = $new_post['type_id'];
-    $new_post['title'] = htmlspecialchars($_POST['post-heading']);
+    $new_post['title'] = $_POST['post-heading'];
     $required = ['title'];
     if ($new_post['type_id'] !== 3) {
         array_push($required, 'content');
     }
     if ($new_post['type_id'] < 3) {
-        $new_post['content'] = htmlspecialchars($_POST['post-text']);
+        $new_post['content'] = $_POST['post-text'];
     } else if ($new_post['type_id'] > 3) {
         $new_post['content'] = strip_tags($_POST['post-url']);
     }
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($new_post['type_id'] === 2) {
-        $new_post['cite_author'] = htmlspecialchars($_POST['cite-author']);
+        $new_post['cite_author'] = $_POST['cite-author'];
         array_push($required, 'cite_author');
     } else {
         $new_post['cite_author'] = NULL;
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (($new_post['type_id'] === 2) && (strlen($new_post['content']) > 70))  {
         $errors['content'] = 'Цитата не должна превышать 70 знаков.';
     }
-    $post_tags = ($_POST['post-tags']) ? explode(' ', htmlspecialchars($_POST['post-tags'])) : false;
+    $post_tags = ($_POST['post-tags']) ? explode(' ', strip_tags($_POST['post-tags'])) : false;
 
     if ($new_post['type_id'] === 4) {
         $check_url = strip_tags($_POST['post-url']);
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (count($errors)) {
-        $new_post['tags'] = htmlspecialchars($_POST['post-tags']);
+        $new_post['tags'] = strip_tags($_POST['post-tags']);
         $page_content = include_template('adding-post', [
             'posts_types' => $posts_types, 'post_type_id' => $post_type_id, 'errors' => $errors, 'previous_values' => $new_post
         ]);

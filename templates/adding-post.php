@@ -32,7 +32,7 @@
                             <div class="adding-post__input-wrapper form__input-wrapper">
                                 <label class="adding-post__label form__label" for="post-heading">Заголовок <span class="form__input-required">*</span></label>
                                 <div class="form__input-section<?= ($errors['title']) ? ' form__input-section--error' : ''; ?>">
-                                    <input class="adding-post__input form__input" id="post-heading" type="text" name="post-heading" placeholder="Введите заголовок" value="<?= ($previous_values) ? $previous_values['title'] : ''; ?>">
+                                    <input class="adding-post__input form__input" id="post-heading" type="text" name="post-heading" placeholder="Введите заголовок" value="<?= ($previous_values) ? htmlspecialchars($previous_values['title']) : ''; ?>">
                                     <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                     <div class="form__error-text">
                                         <h3 class="form__error-title">Заголовок поста</h3>
@@ -45,7 +45,7 @@
                             <div class="adding-post__textarea-wrapper form__textarea-wrapper">
                                 <label class="adding-post__label form__label" for="post-text"><?= text_in_label($post_type_id); ?><span class="form__input-required">*</span></label>
                                 <div class="form__input-section<?= ($errors['content']) ? ' form__input-section--error' : ''; ?>">
-                                    <textarea class="adding-post__textarea<?= ($post_type_id === 2) ? ' adding-post__textarea--quote' : ''; ?> form__textarea form__input" id="post-text" name="post-text" placeholder="<?= ($post_type_id === 2) ? 'Текст цитаты' : 'Введите текст публикации'; ?>"><?= ($previous_values) ? $previous_values['content'] : ''; ?></textarea>
+                                    <textarea class="adding-post__textarea<?= ($post_type_id === 2) ? ' adding-post__textarea--quote' : ''; ?> form__textarea form__input" id="post-text" name="post-text" placeholder="<?= ($post_type_id === 2) ? 'Текст цитаты' : 'Введите текст публикации'; ?>"><?= ($previous_values) ? htmlspecialchars($previous_values['content']) : ''; ?></textarea>
                             <?php else: ?>
                             <div class="adding-post__input-wrapper form__input-wrapper">
                                 <label class="adding-post__label form__label" for="post-url"><?= text_in_label($post_type_id); ?><?= ($post_type_id !== 3) ? '<span class="form__input-required">*</span>' : ''; ?></label>
@@ -64,7 +64,7 @@
                             <div class="adding-post__textarea-wrapper form__input-wrapper">
                             <label class="adding-post__label form__label" for="cite-author">Автор <span class="form__input-required">*</span></label>
                             <div class="form__input-section<?= ($errors['cite_author']) ? ' form__input-section--error' : ''; ?>">
-                                <input class="adding-post__input form__input" id="cite-author" type="text" name="cite-author" value="<?= ($previous_values) ? $previous_values['cite_author'] : ''; ?>">
+                                <input class="adding-post__input form__input" id="cite-author" type="text" name="cite-author" value="<?= ($previous_values) ? htmlspecialchars($previous_values['cite_author']) : ''; ?>">
                                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                 <div class="form__error-text">
                                 <h3 class="form__error-title">Автор цитаты</h3>
