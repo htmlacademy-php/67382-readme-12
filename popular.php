@@ -7,11 +7,19 @@ require_once 'init.php';
 
 const SORTING_TYPES = ['views', 'likes', 'date'];
 
-$filters_type = (int) filter_input(INPUT_GET, 'type_id', FILTER_SANITIZE_NUMBER_INT);
+$filters_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 $sorting_type = filter_input(INPUT_GET, 'sorting', FILTER_SANITIZE_STRING);
 $sorting_order = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_STRING);
-if (!in_array($filters_type, array_column($posts_types, 'id'))) {
+if (!in_array($filters_type, array_column($posts_types, 'type'))) {
     $filters_type = NULL;
+    $filters_type_id = NULL;
+} else {
+    foreach ($posts_types as $post_type) {
+        if ($post_type['type'] === $filters_type) {
+            $filters_type_id = $post_type['id'];
+            break;
+        }
+    }
 }
 if (!in_array($sorting_type, SORTING_TYPES)) {
     $sorting_type = 'views';
@@ -20,7 +28,7 @@ if ($sorting_order !== 'asc') {
     $sorting_order = 'desc';
 }
 
-$popular_posts = get_popular_posts($con, $filters_type, $sorting_type, $sorting_order);
+$popular_posts = get_popular_posts($con, $filters_type_id, $sorting_type, $sorting_order);
 $posts_content = include_template('posts', [
     'popular_posts' => $popular_posts
 ]);

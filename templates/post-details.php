@@ -3,10 +3,10 @@
     <h1 class="page__title page__title--publication"><?= htmlspecialchars($post['title']); ?></h1>
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
-      <div class="post-details__wrapper post-<?= $post['alias']; ?>">
+      <div class="post-details__wrapper post-<?= $post['type']; ?>">
         <div class="post-details__main-block post post--details">
 
-        <?php switch ($post['alias']):
+        <?php switch ($post['type']):
             case 'quote': ?>
                 <div class="post__main">
                     <blockquote>

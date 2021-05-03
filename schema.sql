@@ -19,7 +19,7 @@ CREATE TABLE users (
 CREATE TABLE posts_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   type_name VARCHAR(64),
-  alias VARCHAR(64)
+  type VARCHAR(64)
 );
 
 -- Тэги

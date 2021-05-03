@@ -10,8 +10,8 @@
  *
  */
 
-function get_popular_posts($con, $filters_type, $sorting_type, $sorting_order) {
-    $filter_string = $filters_type ? "WHERE p.type_id = '$filters_type' " : "";
+function get_popular_posts($con, $filters_type_id, $sorting_type, $sorting_order) {
+    $filter_string = $filters_type_id ? "WHERE p.type_id = '$filters_type_id' " : "";
     switch (true) {
         case ($sorting_type === 'likes'):
             $sorting_type_string = ' likes_total';
@@ -27,7 +27,7 @@ function get_popular_posts($con, $filters_type, $sorting_type, $sorting_order) {
     u.user_name,
     u.avatar,
     t.type_name,
-    t.alias,
+    t.type,
     p.id,
     title,
     content,
@@ -63,7 +63,7 @@ function get_post($con, $post_id) {
     u.avatar,
     u.reg_date,
     t.type_name,
-    t.alias,
+    t.type,
     p.user_id,
     title,
     content,

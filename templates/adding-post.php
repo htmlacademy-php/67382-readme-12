@@ -11,9 +11,9 @@
             <?php if ($posts_types): ?>
                 <?php foreach ($posts_types as $post_type): ?>
                 <li class="adding-post__tabs-item filters__item">
-                    <a class="adding-post__tabs-link filters__button filters__button--<?= $post_type['alias']; ?><?=((int) $post_type['id'] === $post_type_id) ? ' filters__button--active' : ''; ?> tabs__item <?=((int) $post_type['id'] === $post_type_id) ? ' tabs__item--active' : ''; ?> button" href="add.php?type_id=<?= $post_type['id']; ?>">
-                        <svg class="filters__icon" <?= icons_sizes($post_type['alias']); ?>>
-                            <use xlink:href="#icon-filter-<?= $post_type['alias']; ?>"></use>
+                    <a class="adding-post__tabs-link filters__button filters__button--<?= $post_type['type']; ?><?=($post_type['type'] === $adding_type) ? ' filters__button--active' : ''; ?> tabs__item <?=($post_type['type'] === $adding_type) ? ' tabs__item--active' : ''; ?> button" href="add.php?type=<?= $post_type['type']; ?>">
+                        <svg class="filters__icon" <?= icons_sizes($post_type['type']); ?>>
+                            <use xlink:href="#icon-filter-<?= $post_type['type']; ?>"></use>
                         </svg>
                         <span><?= $post_type['type_name']; ?></span>
                     </a>
@@ -23,10 +23,10 @@
             </ul>
         </div>
         <div class="adding-post__tab-content">
-            <section class="adding-post__<?= $posts_types[$post_type_id]['alias']; ?> tabs__content tabs__content--active">
-                <h2 class="visually-hidden">Форма добавления <?= types_in_heading($post_type_id); ?></h2>
-                <form class="adding-post__form form" action="add.php?type_id=<?= $post_type_id; ?>" method="post"<?=($post_type_id === 3) ? ' enctype="multipart/form-data"' : ''; ?>>
-                    <input type="hidden" name="post_type_id" value="<?= $post_type_id; ?>" id="post_type_id">
+            <section class="adding-post__<?= $posts_types[$adding_type]['type']; ?> tabs__content tabs__content--active">
+                <h2 class="visually-hidden">Форма добавления <?= types_in_heading($adding_type); ?></h2>
+                <form class="adding-post__form form" action="add.php?type=<?= $adding_type; ?>" method="post"<?=($adding_type === 'photo') ? ' enctype="multipart/form-data"' : ''; ?>>
+                    <input type="hidden" name="adding_type" value="<?= $adding_type; ?>" id="adding_type">
                     <div class="form__text-inputs-wrapper">
                         <div class="form__text-inputs">
                             <div class="adding-post__input-wrapper form__input-wrapper">
@@ -41,26 +41,26 @@
                                 </div>
                             </div>
 
-                            <?php if ($post_type_id < 3): ?>
+                            <?php if (($adding_type === 'text') || ($adding_type === 'quote')): ?>
                             <div class="adding-post__textarea-wrapper form__textarea-wrapper">
-                                <label class="adding-post__label form__label" for="post-text"><?= text_in_label($post_type_id); ?><span class="form__input-required">*</span></label>
+                                <label class="adding-post__label form__label" for="post-text"><?= text_in_label($adding_type); ?><span class="form__input-required">*</span></label>
                                 <div class="form__input-section<?= ($errors['content']) ? ' form__input-section--error' : ''; ?>">
-                                    <textarea class="adding-post__textarea<?= ($post_type_id === 2) ? ' adding-post__textarea--quote' : ''; ?> form__textarea form__input" id="post-text" name="post-text" placeholder="<?= ($post_type_id === 2) ? 'Текст цитаты' : 'Введите текст публикации'; ?>"><?= ($previous_values) ? htmlspecialchars($previous_values['content']) : ''; ?></textarea>
+                                    <textarea class="adding-post__textarea<?= ($adding_type === 'quote') ? ' adding-post__textarea--quote' : ''; ?> form__textarea form__input" id="post-text" name="post-text" placeholder="<?= ($adding_type === 'quote') ? 'Текст цитаты' : 'Введите текст публикации'; ?>"><?= ($previous_values) ? htmlspecialchars($previous_values['content']) : ''; ?></textarea>
                             <?php else: ?>
                             <div class="adding-post__input-wrapper form__input-wrapper">
-                                <label class="adding-post__label form__label" for="post-url"><?= text_in_label($post_type_id); ?><?= ($post_type_id !== 3) ? '<span class="form__input-required">*</span>' : ''; ?></label>
+                                <label class="adding-post__label form__label" for="post-url"><?= text_in_label($adding_type); ?><?= ($adding_type !== 'photo') ? '<span class="form__input-required">*</span>' : ''; ?></label>
                                 <div class="form__input-section<?= ($errors['content']) ? ' form__input-section--error' : ''; ?>">
                                     <input class="adding-post__input form__input" id="post-url" type="text" name="post-url" placeholder="Введите ссылку" value="<?= ($previous_values) ? $previous_values['content'] : ''; ?>">
                             <?php endif; ?>
                                     <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                     <div class="form__error-text">
-                                        <h3 class="form__error-title"><?= content_error_title($post_type_id); ?></h3>
+                                        <h3 class="form__error-title"><?= content_error_title($adding_type); ?></h3>
                                         <p class="form__error-desc"><?= ($errors['content']) ? $errors['content'] : ''; ?></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <?php if ($post_type_id === 2): ?>
+                            <?php if ($adding_type === 'quote'): ?>
                             <div class="adding-post__textarea-wrapper form__input-wrapper">
                             <label class="adding-post__label form__label" for="cite-author">Автор <span class="form__input-required">*</span></label>
                             <div class="form__input-section<?= ($errors['cite_author']) ? ' form__input-section--error' : ''; ?>">
@@ -93,7 +93,7 @@
                             <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                             <ul class="form__invalid-list">
                                 <?php foreach ($errors as $key => $error_text): ?>
-                                    <li class="form__invalid-item"><?= sidebar_error_title($key, $post_type_id) . $error_text; ?></li>
+                                    <li class="form__invalid-item"><?= sidebar_error_title($key, $adding_type) . $error_text; ?></li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
@@ -101,7 +101,7 @@
 
                     </div>
 
-                    <?php if ($post_type_id === 3): ?>
+                    <?php if ($adding_type === 'photo'): ?>
                     <div class="adding-post__input-file-container form__input-container form__input-container--file">
                         <div class="adding-post__input-file-wrapper form__input-file-wrapper js-file-error form__input-section<?= ($errors['photo']) ? ' form__input-section--error' : ''; ?>"<?= ($errors['photo']) ? ' style="border: 2px solid #f02323!important;border-radius: 10px!important;"' : ''; ?>>
                             <div class="adding-post__file-zone adding-post__file-zone--photo form__file-zone js-dropzone">

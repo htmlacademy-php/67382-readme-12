@@ -1,13 +1,13 @@
 <?php if ($popular_posts): ?>
     <?php foreach ($popular_posts as $post): ?>
-        <article class="popular__post post post-<?= $post['alias']; ?>">
+        <article class="popular__post post post-<?= $post['type']; ?>">
             <header class="post__header">
                 <a href="post.php?post_id=<?= $post['id']; ?>">
                     <h2><?= htmlspecialchars($post['title']); ?></h2>
                 </a>
             </header>
             <div class="post__main">
-            <?php switch ($post['alias']):
+            <?php switch ($post['type']):
                 case 'quote': ?>
                     <blockquote>
                         <p><?= htmlspecialchars($post['content']); ?></p>

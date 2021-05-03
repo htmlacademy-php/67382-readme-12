@@ -88,22 +88,22 @@ function icons_sizes($icon_class) {
 /**
  * Возвращает тип поста для подстановки в заголовок формы добавления поста
  *
- * @param string $post_type_id - тип поста
+ * @param string $post_type - тип поста
  * @return string строка для заголовка
  *
  */
 
-function types_in_heading($post_type_id) {
-    switch ($post_type_id) {
-        case 2:
+function types_in_heading($post_type) {
+    switch ($post_type) {
+        case 'quote':
             return 'цитаты';
-        case 1:
+        case 'text':
             return 'текста';
-        case 5:
+        case 'link':
             return 'ссылки';
-        case 4:
+        case 'video':
             return 'видео';
-        case 3:
+        case 'photo':
             return 'фото';
     }
 }
@@ -111,22 +111,22 @@ function types_in_heading($post_type_id) {
 /**
  * Возвращает текст тэга label для подстановки в форму добавления поста
  *
- * @param string $post_type_id - тип поста
+ * @param string $post_type - тип поста
  * @return string текст тэга label
  *
  */
 
-function text_in_label($post_type_id) {
-    switch ($post_type_id) {
-        case 2:
+function text_in_label($post_type) {
+    switch ($post_type) {
+        case 'quote':
             return 'Текст цитаты ';
-        case 1:
+        case 'text':
             return 'Текст поста ';
-        case 5:
+        case 'link':
             return 'Ссылка ';
-        case 4:
+        case 'video':
             return 'Ссылка youtube ';
-        case 3:
+        case 'photo':
             return 'Ссылка из интернета';
     }
 }
@@ -134,22 +134,22 @@ function text_in_label($post_type_id) {
 /**
  * Возвращает текст заголовка ошибки для подстановки в форму добавления поста
  *
- * @param string $post_type_id - тип поста
+ * @param string $post_type - тип поста
  * @return string текст заголовка ошибки
  *
  */
 
-function content_error_title($post_type_id) {
-    switch ($post_type_id) {
-        case 2:
+function content_error_title($post_type) {
+    switch ($post_type) {
+        case 'quote':
             return 'Текст цитаты';
-        case 1:
+        case 'text':
             return 'Текст поста';
-        case 5:
+        case 'link':
             return 'Ссылка';
-        case 4:
+        case 'video':
             return 'Ссылка youtube ';
-        case 3:
+        case 'photo':
             return 'Ссылка на фото';
     }
 }
@@ -158,12 +158,12 @@ function content_error_title($post_type_id) {
  * Возвращает текст названия поля перед текстом ошибки в сайдбаре
  *
  * @param string $key - поле с ошибкой
- * @param string $post_type_id - тип поста
+ * @param string $post_type - тип поста
  * @return string текст заголовка ошибки
  *
  */
 
-function sidebar_error_title($key, $post_type_id) {
+function sidebar_error_title($key, $post_type) {
     switch ($key) {
         case 'title':
             return 'Заголовок. ';
@@ -174,16 +174,16 @@ function sidebar_error_title($key, $post_type_id) {
         case 'photo':
             return 'Файл с фото. ';
         case 'content':
-            switch ($post_type_id) {
-                case 2:
+            switch ($post_type) {
+                case 'quote':
                     return 'Цитата. ';
-                case 1:
+                case 'text':
                     return 'Текст поста. ';
-                case 5:
+                case 'link':
                     return 'Ссылка. ';
-                case 4:
+                case 'video':
                     return 'Ссылка youtube. ';
-                case 3:
+                case 'photo':
                     return 'Ссылка на фото. ';
         }
     }
