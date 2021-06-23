@@ -86,75 +86,6 @@ function icons_sizes($icon_class) {
 }
 
 /**
- * Возвращает тип поста для подстановки в заголовок формы добавления поста
- *
- * @param string $post_type - тип поста
- * @return string строка для заголовка
- *
- */
-
-function types_in_heading($post_type) {
-    switch ($post_type) {
-        case 'quote':
-            return 'цитаты';
-        case 'text':
-            return 'текста';
-        case 'link':
-            return 'ссылки';
-        case 'video':
-            return 'видео';
-        case 'photo':
-            return 'фото';
-    }
-}
-
-/**
- * Возвращает текст тэга label для подстановки в форму добавления поста
- *
- * @param string $post_type - тип поста
- * @return string текст тэга label
- *
- */
-
-function text_in_label($post_type) {
-    switch ($post_type) {
-        case 'quote':
-            return 'Текст цитаты ';
-        case 'text':
-            return 'Текст поста ';
-        case 'link':
-            return 'Ссылка ';
-        case 'video':
-            return 'Ссылка youtube ';
-        case 'photo':
-            return 'Ссылка из интернета';
-    }
-}
-
-/**
- * Возвращает текст заголовка ошибки для подстановки в форму добавления поста
- *
- * @param string $post_type - тип поста
- * @return string текст заголовка ошибки
- *
- */
-
-function content_error_title($post_type) {
-    switch ($post_type) {
-        case 'quote':
-            return 'Текст цитаты';
-        case 'text':
-            return 'Текст поста';
-        case 'link':
-            return 'Ссылка';
-        case 'video':
-            return 'Ссылка youtube ';
-        case 'photo':
-            return 'Ссылка на фото';
-    }
-}
-
-/**
  * Возвращает текст названия поля перед текстом ошибки в сайдбаре
  *
  * @param string $key - поле с ошибкой
@@ -165,20 +96,23 @@ function content_error_title($post_type) {
 
 function sidebar_error_title($key, $post_type) {
     switch ($key) {
-        case 'title':
+        case 'post-heading':
             return 'Заголовок. ';
         case 'cite_author':
             return 'Автор. ';
         case 'tags':
             return 'Теги. ';
-        case 'photo':
+        case 'file-photo':
             return 'Файл с фото. ';
-        case 'content':
+        case 'post-text':
             switch ($post_type) {
                 case 'quote':
                     return 'Цитата. ';
                 case 'text':
                     return 'Текст поста. ';
+        }
+        case 'post-url':
+            switch ($post_type) {
                 case 'link':
                     return 'Ссылка. ';
                 case 'video':
@@ -236,4 +170,100 @@ function show_error($is_err_mysql, $err, $is_err_404) {
     }
     show_page($page_content, $page_title, $user_name);
     exit;
+}
+
+function validateFilled($field_name) {
+    if (empty($_POST[$field_name])) {
+        return 'Это поле должно быть заполнено';
+    }
+}
+
+function validateQuoteLength($field_name) {
+    if (strlen($_POST[$field_name]) > 70) {
+        return 'Цитата не должна превышать 70 знаков.';
+    }
+}
+
+function validateUrl($field_name) {
+    if (!filter_var(make_link($_POST[$field_name]), FILTER_VALIDATE_URL)) {
+        return 'Текст в поле не является ссылкой';
+    }
+    return false;
+}
+
+function validate_form($form) {
+    $errors = [];
+    $add_field_name = '';
+    $complex_validation_field = '';
+    foreach ($form['fields'] as $field) {
+        if (isset($field['validations_field'])) {
+            $add_field_name = $field['name'];
+            $complex_validation_field = $field['validations_field'];
+        } else {
+            if ($field['name'] === $complex_validation_field) {
+                    $photo_result = validatePhoto($field['name'], $add_field_name);
+                    $temp_errors = $photo_result[0];
+                    $isPhotoAtLink = $photo_result[1];
+                    $errors = array_merge($errors, $temp_errors);
+                    $complex_validation_field = '';
+                    $add_field_name = '';
+            } else {
+                foreach ($field['validations'] as $validation) {
+                    if (!isset($errors[$field['name']])) {
+                        $error = $validation($field['name']);
+                        if ($error) {
+                            $errors[$field['name']] = $error;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (isset($isPhotoAtLink)) {
+        if ($isPhotoAtLink) {
+            return [$errors, $isPhotoAtLink, $photo_result[2]];
+        }
+        return [$errors, $isPhotoAtLink];
+    }
+    return $errors;
+}
+
+function validatePhoto($field_name, $add_field) {
+    $temp_errors = [];
+    if ($_FILES[$field_name]['size'] > 0) {
+        $tmp_name = $_FILES[$field_name]['tmp_name'];
+        $file_size = $_FILES[$field_name]['size'];
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+
+        if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
+            $temp_errors[$field_name] = 'Загрузите изображение в формате jpeg, png или gif';
+        } else {
+            $isPhotoAtLink = false;
+        }
+    } else {
+        $photo_url = filter_var(make_link($_POST[$add_field]), FILTER_VALIDATE_URL);
+        if ($photo_url) {
+            $photo_file = file_get_contents($photo_url);
+            if ($photo_file) {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $file_type = finfo_buffer($finfo, $photo_file);
+                if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
+                    $temp_errors[$add_field] = 'По ссылке отсутствует изображение в формате jpeg, png или gif';
+                } else {
+                    $isPhotoAtLink = true;
+                }
+            } else {
+                $temp_errors[$add_field] = 'Невозможно загрузить изображение по ссылке';
+            }
+        } else {
+            $temp_errors[$add_field] = 'Загрузите изображение или укажите ссылку на него';
+            $temp_errors[$field_name] = 'Загрузите изображение или укажите ссылку на него';
+        }
+    }
+    if ($isPhotoAtLink) {
+        return [$temp_errors, $isPhotoAtLink, $photo_url];
+    }
+    return [$temp_errors, false];
 }

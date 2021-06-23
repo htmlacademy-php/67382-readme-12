@@ -10,116 +10,292 @@ if (!in_array($adding_type, array_column($posts_types, 'type'))) {
     $adding_type = 'text';
 }
 
+$add_forms = [
+    'text' => [
+        'title_part' => 'текста',
+        'fields' => [
+            [
+                'title' => 'Заголовок',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-heading',
+                'placeholder' => 'Введите заголовок',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Текст поста',
+                'required' => true,
+                'type' => 'textarea',
+                'name' => 'post-text',
+                'placeholder' => 'Введите текст публикации',
+                'field_type' => 'textarea',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Теги',
+                'required' => false,
+                'type' => 'text',
+                'name' => 'tags',
+                'placeholder' => 'Введите теги',
+                'field_type' => 'input',
+                'validations' => []
+            ],
+        ],
+    ],
+    'quote' => [
+        'title_part' => 'цитаты',
+        'fields' => [
+            [
+                'title' => 'Заголовок',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-heading',
+                'placeholder' => 'Введите заголовок',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Текст цитаты',
+                'required' => true,
+                'type' => 'textarea',
+                'name' => 'post-text',
+                'placeholder' => 'Текст цитаты',
+                'field_type' => 'textarea',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    },
+                    1 => function ($field_name) {
+                        return validateQuoteLength($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Автор',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'cite_author',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Теги',
+                'required' => false,
+                'type' => 'text',
+                'name' => 'tags',
+                'placeholder' => 'Введите теги',
+                'field_type' => 'input',
+                'validations' => []
+            ],
+        ],
+    ],
+    'photo' => [
+        'title_part' => 'фото',
+        'fields' => [
+            [
+                'title' => 'Заголовок',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-heading',
+                'placeholder' => 'Введите заголовок',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Ссылка из интернета',
+                'required' => false,
+                'type' => 'text',
+                'name' => 'post-url',
+                'placeholder' => 'Введите ссылку',
+                'field_type' => 'input',
+                'validations_field' => 'file-photo'
+            ],
+            [
+                'title' => 'Теги',
+                'required' => false,
+                'type' => 'text',
+                'name' => 'tags',
+                'placeholder' => 'Введите теги',
+                'field_type' => 'input',
+                'validations' => []
+            ],
+            [
+                'required' => false,
+                'type' => 'file',
+                'name' => 'file-photo',
+                'field_type' => 'input-file',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validatePhoto($field_name, $add_field);
+                    }
+                ]
+            ]
+        ],
+    ],
+    'video' => [
+        'title_part' => 'видео',
+        'fields' => [
+            [
+                'title' => 'Заголовок',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-heading',
+                'placeholder' => 'Введите заголовок',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Ссылка youtube',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-url',
+                'placeholder' => 'Введите ссылку',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    },
+                    1 => function ($field_name) {
+                        return validateUrl($field_name);
+                    },
+                    2 => function ($field_name) {
+                        return check_youtube_url($_POST[$field_name]);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Теги',
+                'required' => false,
+                'type' => 'text',
+                'name' => 'tags',
+                'placeholder' => 'Введите теги',
+                'field_type' => 'input',
+                'validations' => []
+            ],
+        ],
+    ],
+    'link' => [
+        'title_part' => 'ссылки',
+        'fields' => [
+            [
+                'title' => 'Заголовок',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-heading',
+                'placeholder' => 'Введите заголовок',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Ссылка',
+                'required' => true,
+                'type' => 'text',
+                'name' => 'post-url',
+                'placeholder' => 'Введите ссылку',
+                'field_type' => 'input',
+                'validations' => [
+                    0 => function ($field_name) {
+                        return validateFilled($field_name);
+                    },
+                    1 => function ($field_name) {
+                        return validateUrl($field_name);
+                    }
+                ]
+            ],
+            [
+                'title' => 'Теги',
+                'required' => false,
+                'type' => 'text',
+                'name' => 'tags',
+                'placeholder' => 'Введите теги',
+                'field_type' => 'input',
+                'validations' => []
+            ],
+        ],
+    ]
+];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $new_post = [];
-    $errors = [];
     $adding_type = $_POST['adding_type'];
+    $adding_form = $add_forms[$adding_type];
+    if ($adding_type === 'photo') {
+        $validation_result = validate_form($adding_form);
+        $errors = $validation_result[0];
+        $isPhotoAtLink = $validation_result[1];
+        if ($isPhotoAtLink) {
+            $photo_url = $validation_result[2];
+        }
+    } else {
+        $errors = validate_form($adding_form);
+    }
+    $new_post = [];
+
     foreach ($posts_types as $post_type) {
         if ($post_type['type'] === $adding_type) {
             $new_post['type_id'] = $post_type['id'];
             break;
         }
     }
+
     $new_post['title'] = $_POST['post-heading'];
-    $required = ['title'];
-    if ($adding_type !== 'photo') {
-        array_push($required, 'content');
-    }
     if (($adding_type === 'text') || ($adding_type === 'quote')) {
         $new_post['content'] = $_POST['post-text'];
     } else if (($adding_type === 'video') || ($adding_type === 'link')) {
-        $check_url = make_link($_POST['post-url']);
-        $new_post['content'] = $check_url;
+        $new_post['content'] = make_link($_POST['post-url']);
     }
 
     if ($adding_type === 'photo') {
         $new_post['content'] = '';
-
-        if ($_FILES['file-photo']['size'] > 0) {
-            $tmp_name = $_FILES['file-photo']['tmp_name'];
-            $file_size = $_FILES['file-photo']['size'];
-
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-
-            if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
-                $errors['photo'] = 'Загрузите изображение в формате jpeg, png или gif';
-            } else {
-                $isPhotoAtLink = false;
-            }
-        } else {
-            $check_url = make_link($_POST['post-url']);
-            $photo_url = filter_var($check_url, FILTER_VALIDATE_URL);
-            if ($photo_url) {
-                $photo_file = file_get_contents($photo_url);
-                if ($photo_file) {
-                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                    $file_type = finfo_buffer($finfo, $photo_file);
-                    if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
-                        $errors['content'] = 'По ссылке отсутствует изображение в формате jpeg, png или gif';
-                    } else {
-                        $isPhotoAtLink = true;
-                    }
-                } else {
-                    $errors['content'] = 'Невозможно загрузить изображение по ссылке';
-                }
-            } else {
-                $errors['content'] = 'Загрузите изображение или укажите ссылку на него';
-                $errors['photo'] = 'Загрузите изображение или укажите ссылку на него';
-            }
-        }
     }
 
     if ($adding_type === 'quote') {
-        $new_post['cite_author'] = $_POST['cite-author'];
-        array_push($required, 'cite_author');
+        $new_post['cite_author'] = $_POST['cite_author'];
     } else {
         $new_post['cite_author'] = NULL;
     }
 
-    if (($adding_type === 'quote') && (strlen($new_post['content']) > 70))  {
-        $errors['content'] = 'Цитата не должна превышать 70 знаков.';
-    }
-    $post_tags = ($_POST['post-tags']) ? explode(' ', strip_tags($_POST['post-tags'])) : false;
-
-    if ($adding_type === 'video') {
-        $video_url = filter_var($check_url, FILTER_VALIDATE_URL);
-        if ($video_url) {
-            if (check_youtube_url($video_url)) {
-                $new_post['content'] = $video_url;
-            } else {
-                $errors['content'] = 'Видео по такой ссылке не найдено. Проверьте ссылку на видео';
-            }
-        } else {
-            $errors['content'] = 'Укажите ссылку на видео на YouTube';
-        }
-    }
-
-    if ($adding_type === 'link') {
-        $link_url = filter_var($check_url, FILTER_VALIDATE_URL);
-        if ($link_url) {
-            $new_post['content'] = $link_url;
-        } else {
-            $errors['content'] = 'Текст в поле не является ссылкой';
-        }
-    }
-
-    foreach ($required as $key) {
-        if (empty($new_post[$key])) {
-            $errors[$key] = 'Это поле должно быть заполнено.';
-        }
-    }
+    $post_tags = ($_POST['tags']) ? explode(' ', strip_tags($_POST['tags'])) : false;
 
     if (count($errors)) {
-        $new_post['tags'] = strip_tags($_POST['post-tags']);
+        $new_post['tags'] = strip_tags($_POST['tags']);
         $page_content = include_template('adding-post', [
-            'posts_types' => $posts_types, 'adding_type' => $adding_type, 'errors' => $errors, 'previous_values' => $new_post
+            'posts_types' => $posts_types, 'adding_type' => $adding_type, 'errors' => $errors, 'adding_form' => $adding_form
         ]);
     } else {
         if ($adding_type === 'photo') {
             if ($isPhotoAtLink) {
                 $img_path = basename($photo_url);
+                $photo_file = file_get_contents($photo_url);
                 file_put_contents('uploads/' . $img_path, $photo_file);
             } else {
                 $img_path = $_FILES['file-photo']['name'];
@@ -134,8 +310,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 } else {
+    $adding_form = $add_forms[$adding_type];
     $page_content = include_template('adding-post', [
-        'posts_types' => $posts_types, 'adding_type' => $adding_type
+        'posts_types' => $posts_types, 'adding_type' => $adding_type, 'adding_form' => $adding_form
     ]);
 }
 
