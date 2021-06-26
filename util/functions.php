@@ -103,7 +103,16 @@ function sidebar_error_title($key, $post_type) {
         case 'tags':
             return 'Теги. ';
         case 'file-photo':
-            return 'Файл с фото. ';
+        case 'file-userpic':
+                return 'Файл с фото. ';
+        case 'reg-email':
+            return 'Электронная почта. ';
+        case 'login':
+            return 'Логин. ';
+        case 'reg-password':
+            return 'Пароль. ';
+        case 'password-repeat':
+            return 'Повтор пароля. ';
         case 'post-text':
             switch ($post_type) {
                 case 'quote':
@@ -131,11 +140,12 @@ function sidebar_error_title($key, $post_type) {
  * @user_name - пользователь
  *
  */
-function show_page($page_content, $page_name, $user_name) {
+function show_page($page_content, $page_name, $user_name, $is_reg_page) {
     $layout_content = include_template('layout', [
         'content' => $page_content,
         'page_name' => $page_name,
-        'user_name' => $user_name
+        'user_name' => $user_name,
+        'is_reg_page' => $is_reg_page
     ]);
 
     print($layout_content);
@@ -168,7 +178,7 @@ function show_error($is_err_mysql, $err, $is_err_404) {
     if ($is_err_404) {
         header("HTTP/1.1 404 Not Found");
     }
-    show_page($page_content, $page_title, $user_name);
+    show_page($page_content, $page_title, $user_name, false);
     exit;
 }
 
@@ -191,7 +201,37 @@ function validateUrl($field_name) {
     return false;
 }
 
-function validate_form($form) {
+function validateEmailCorrect($field_name) {
+    if (!filter_var($_POST[$field_name], FILTER_VALIDATE_EMAIL)) {
+        return 'Значение поля не является корректным email-адресом';
+    }
+    return false;
+}
+
+function validateEmailUnique($field_name, $con) {
+    $email = mysqli_real_escape_string($con, $_POST[$field_name]);
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $res = mysqli_query($con, $sql);
+    if (mysqli_num_rows($res) > 0) {
+        return 'Пользователь с этим email-адресом уже существует';
+    }
+    return false;
+}
+
+function validatePasswordLength($field_name) {
+    if (strlen($_POST[$field_name]) < 5) {
+        return 'Пароль должен быть не менее 5 знаков';
+    }
+}
+
+function validatePassword($field_name, $add_field) {
+    if ($_POST[$field_name] !== $_POST[$add_field]) {
+        return 'Пароли не совпадают';
+    }
+    return false;
+}
+
+function validate_form($form, $con) {
     $errors = [];
     $add_field_name = '';
     $complex_validation_field = '';
@@ -208,9 +248,13 @@ function validate_form($form) {
                     $complex_validation_field = '';
                     $add_field_name = '';
             } else {
-                foreach ($field['validations'] as $validation) {
+                foreach ($field['validations'] as $key => $validation) {
                     if (!isset($errors[$field['name']])) {
-                        $error = $validation($field['name']);
+                        if (($field['name'] === 'reg-email') && ($key === 2)) {
+                            $error = $validation($field['name'], $con);
+                        } else {
+                            $error = $validation($field['name']);
+                        }
                         if ($error) {
                             $errors[$field['name']] = $error;
                         }
@@ -231,14 +275,9 @@ function validate_form($form) {
 function validatePhoto($field_name, $add_field) {
     $temp_errors = [];
     if ($_FILES[$field_name]['size'] > 0) {
-        $tmp_name = $_FILES[$field_name]['tmp_name'];
-        $file_size = $_FILES[$field_name]['size'];
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-
-        if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
-            $temp_errors[$field_name] = 'Загрузите изображение в формате jpeg, png или gif';
+        $pictureValidation = validateUploadedPicture($field_name);
+        if ($pictureValidation) {
+            $temp_errors[$field_name] = $pictureValidation;
         } else {
             $isPhotoAtLink = false;
         }
@@ -266,4 +305,19 @@ function validatePhoto($field_name, $add_field) {
         return [$temp_errors, $isPhotoAtLink, $photo_url];
     }
     return [$temp_errors, false];
+}
+
+function validateUploadedPicture($field_name) {
+    if ($_FILES[$field_name]['size'] > 0) {
+        $tmp_name = $_FILES[$field_name]['tmp_name'];
+        $file_size = $_FILES[$field_name]['size'];
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+
+        if (($file_type !== 'image/jpeg') && ($file_type !== 'image/gif') && ($file_type !== 'image/png')) {
+            return 'Загрузите изображение в формате jpeg, png или gif';
+        }
+    }
+    return false;
 }

@@ -158,3 +158,24 @@ WHERE user_id = '$user_id'";
         show_error(true, $con, false);
     }
 }
+
+/**
+ * Добавление нового пользователя
+ *
+ * @con - ресурс соединения
+ * @new_user - пользователь, которого добавляем
+ * @return - id нового пользователя
+ *
+ */
+
+function add_new_user($con, $new_user) {
+    $sql = 'INSERT INTO users (reg_date, email, user_name, password, avatar) VALUES (NOW(), ?, ?, ?, ?)';
+
+    $stmt = db_get_prepare_stmt($con, $sql, $new_user);
+    if ($res_user = mysqli_stmt_execute($stmt)) {
+        $new_user_id = mysqli_insert_id($con);
+    } else {
+        show_error(true, $con, false);
+    }
+    return $new_post_id;
+}

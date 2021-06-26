@@ -36,4 +36,4 @@ $page_content = include_template('popular-layout', [
     'content' => $posts_content, 'posts_types' => $posts_types, 'filters_type' => $filters_type, 'sorting_type' => $sorting_type, 'sorting_order' => $sorting_order
 ]);
 $page_title = 'readme: популярное';
-show_page($page_content, $page_title, $user_name);
+show_page($page_content, $page_title, $user_name, false);

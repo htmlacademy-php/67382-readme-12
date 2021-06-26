@@ -317,4 +317,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'readme: добавить пост';
-show_page($page_content, $page_title, $user_name);
+show_page($page_content, $page_title, $user_name, false);

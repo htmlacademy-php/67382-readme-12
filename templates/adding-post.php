@@ -41,7 +41,7 @@
                                     <?php elseif ($field['field_type'] === 'input'): ?>
                                         <input class="adding-post__input form__input" id="<?= $field['name']; ?>" type="<?= $field['type']; ?>" name="<?= $field['name']; ?>" placeholder="<?= $field['placeholder'] ?? ''; ?>" value="<?= ($_POST[$field['name']]) ? $_POST[$field['name']] : ''; ?>">
                                     <?php endif; ?>
-                                        <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>                                        </button>
+                                        <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                         <div class="form__error-text">
                                             <h3 class="form__error-title"><?= $field['title']; ?></h3>
                                             <p class="form__error-desc"><?= ($errors[$field['name']]) ? $errors[$field['name']] : ''; ?></p>
