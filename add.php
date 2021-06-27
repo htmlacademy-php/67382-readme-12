@@ -249,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $adding_type = $_POST['adding_type'];
     $adding_form = $add_forms[$adding_type];
     if ($adding_type === 'photo') {
-        $validation_result = validate_form($adding_form);
+        $validation_result = validate_form($adding_form, $con);
         $errors = $validation_result[0];
         $isPhotoAtLink = $validation_result[1];
         if ($isPhotoAtLink) {

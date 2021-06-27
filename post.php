@@ -13,7 +13,7 @@ if ($post_id) {
         'post' => $post, 'user_posts_total' => $user_posts_total
     ]);
     $page_title = 'readme: пост';
-    show_page($page_content, $page_title, $user_name);
+    show_page($page_content, $page_title, $user_name, false);
 } else {
     show_error(false, '404: Страница не существует', true);
 }
