@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS readme;
+
 CREATE DATABASE readme
   DEFAULT CHARACTER SET utf8
   DEFAULT COLLATE utf8_general_ci;
@@ -19,7 +21,7 @@ CREATE TABLE users (
 CREATE TABLE posts_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   type_name VARCHAR(64),
-  icon_class VARCHAR(64)
+  type VARCHAR(64)
 );
 
 -- Тэги

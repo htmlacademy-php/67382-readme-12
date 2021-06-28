@@ -3,10 +3,10 @@
     <h1 class="page__title page__title--publication"><?= htmlspecialchars($post['title']); ?></h1>
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
-      <div class="post-details__wrapper post-<?= $post['icon_class']; ?>">
+      <div class="post-details__wrapper post-<?= $post['type']; ?>">
         <div class="post-details__main-block post post--details">
 
-        <?php switch ($post['icon_class']):
+        <?php switch ($post['type']):
             case 'quote': ?>
                 <div class="post__main">
                     <blockquote>
@@ -161,7 +161,7 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/<?= isset($post['avatar']) ? strip_tags($post['avatar']) : 'icon-input-user.svg'; ?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="uploads/avatars/<?= isset($post['avatar']) ? strip_tags($post['avatar']) : 'icon-input-user.svg'; ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">

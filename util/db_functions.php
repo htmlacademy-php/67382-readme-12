@@ -10,8 +10,8 @@
  *
  */
 
-function get_popular_posts($con, $filters_type, $sorting_type, $sorting_order) {
-    $filter_string = $filters_type ? "WHERE p.type_id = '$filters_type' " : "";
+function get_popular_posts($con, $filters_type_id, $sorting_type, $sorting_order) {
+    $filter_string = $filters_type_id ? "WHERE p.type_id = '$filters_type_id' " : "";
     switch (true) {
         case ($sorting_type === 'likes'):
             $sorting_type_string = ' likes_total';
@@ -27,7 +27,7 @@ function get_popular_posts($con, $filters_type, $sorting_type, $sorting_order) {
     u.user_name,
     u.avatar,
     t.type_name,
-    t.icon_class,
+    t.type,
     p.id,
     title,
     content,
@@ -63,7 +63,7 @@ function get_post($con, $post_id) {
     u.avatar,
     u.reg_date,
     t.type_name,
-    t.icon_class,
+    t.type,
     p.user_id,
     title,
     content,
@@ -157,4 +157,25 @@ WHERE user_id = '$user_id'";
     } else {
         show_error(true, $con, false);
     }
+}
+
+/**
+ * Добавление нового пользователя
+ *
+ * @con - ресурс соединения
+ * @new_user - пользователь, которого добавляем
+ * @return - id нового пользователя
+ *
+ */
+
+function add_new_user($con, $new_user) {
+    $sql = 'INSERT INTO users (reg_date, email, user_name, password, avatar) VALUES (NOW(), ?, ?, ?, ?)';
+
+    $stmt = db_get_prepare_stmt($con, $sql, $new_user);
+    if ($res_user = mysqli_stmt_execute($stmt)) {
+        $new_user_id = mysqli_insert_id($con);
+    } else {
+        show_error(true, $con, false);
+    }
+    return $new_post_id;
 }

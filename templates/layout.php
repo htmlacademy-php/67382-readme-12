@@ -35,9 +35,17 @@
             </div>
         </form>
         <div class="header__nav-wrapper">
-            <!-- здесь должен быть PHP код, который показывает следующий тег по условию -->
-            <?php if ($is_auth): ?>
-                <nav class="header__nav">
+            <nav class="header__nav">
+                <?php if ($is_reg_page): ?>
+                    <ul class="header__user-nav">
+                        <li class="header__authorization">
+                            <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
+                        </li>
+                        <li>
+                            <a class="header__user-button header__user-button--active header__register-button button">Регистрация</a>
+                        </li>
+                    </ul>
+                <?php else: ?>
                     <ul class="header__my-nav">
                         <li class="header__my-page header__my-page--popular">
                             <a class="header__page-link header__page-link--active" title="Популярный контент">
@@ -55,12 +63,11 @@
                             </a>
                         </li>
                     </ul>
-                    <!-- здесь должен быть PHP код, который показывает следующий тег по условию -->
                     <ul class="header__user-nav">
                         <li class="header__profile">
                             <a class="header__profile-link" href="#">
                                 <div class="header__avatar-wrapper">
-                                    <img class="header__profile-avatar" src="img/userpic-medium.jpg" alt="Аватар профиля">
+                                    <img class="header__profile-avatar" src="uploads/avatars/userpic-medium.jpg" alt="Аватар профиля">
                                 </div>
                                 <div class="header__profile-name">
                                     <span>
@@ -105,8 +112,9 @@
                             <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
                         </li>
                     </ul>
-                </nav>
-            <?php endif; ?>
+
+                <?php endif; ?>
+            </nav>
         </div>
     </div>
 </header>

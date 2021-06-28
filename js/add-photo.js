@@ -1,5 +1,14 @@
 (function () {
   var fileChooser = document.querySelector('#file-photo');
+  var classNamePart;
+  if (fileChooser) {
+    classNamePart = 'adding-post';
+  } else {
+    fileChooser = document.querySelector('#file-userpic');
+    if (fileChooser) {
+      classNamePart = 'registration';
+    }
+  }
   if (fileChooser) {
     var previewArea = document.querySelector('.js-preview');
     var dropArea = document.querySelector('.js-dropzone');
@@ -40,7 +49,7 @@
         if (!currentFile) {
           var filePreview = document.createElement("div");
           var fileWrap = document.createElement("div");
-          fileWrap.classList.add("adding-post__image-wrapper");
+          fileWrap.classList.add(classNamePart + "__image-wrapper");
           fileWrap.classList.add("form__file-wrapper");
           currentFile = document.createElement('img');
           currentFile.setAttribute('src', reader.result);
@@ -51,9 +60,9 @@
           filePreview.appendChild(fileWrap);
           previewArea.appendChild(filePreview);
           var filePreviewData = document.createElement("div");
-          filePreviewData.classList.add("adding-post__file-data");
+          filePreviewData.classList.add(classNamePart + "__file-data");
           filePreviewData.classList.add("form__file-data");
-          filePreviewData.innerHTML = '<span class="adding-post__file-name form__file-name">' + fileName + '</span><button class="adding-post__delete-button form__delete-button button js-del-img" type="button"><span>Удалить</span><svg class="adding-post__delete-icon form__delete-icon" viewBox="0 0 18 18" width="12" height="12"><path d="M18 1.3L16.7 0 9 7.7 1.3 0 0 1.3 7.7 9 0 16.7 1.3 18 9 10.3l7.7 7.7 1.3-1.3L10.3 9z"></path></svg></button>';
+          filePreviewData.innerHTML = '<span class="' + classNamePart + '__file-name form__file-name">' + fileName + '</span><button class="' + classNamePart + '__delete-button form__delete-button button js-del-img" type="button"><span>Удалить</span><svg class="' + classNamePart + '__delete-icon form__delete-icon" viewBox="0 0 18 18" width="12" height="12"><path d="M18 1.3L16.7 0 9 7.7 1.3 0 0 1.3 7.7 9 0 16.7 1.3 18 9 10.3l7.7 7.7 1.3-1.3L10.3 9z"></path></svg></button>';
           filePreview.appendChild(filePreviewData);
 
           var delPreviewBtn = filePreview.querySelector(".js-del-img");
