@@ -5,7 +5,7 @@ return [
             'title' => 'Электронная почта',
             'required' => true,
             'type' => 'email',
-            'name' => 'login-email',
+            'name' => 'email',
             'placeholder' => 'Укажите эл.почту',
             'field_type' => 'input',
             'icon-name' => 'user',
@@ -13,12 +13,6 @@ return [
             'validations' => [
                 0 => function ($field_name) {
                     return validateFilled($field_name);
-                },
-                1 => function ($field_name) {
-                    return validateEmailCorrect($field_name);
-                },
-                2 => function ($field_name, $con) {
-                    return validateEmailUnique($field_name, $con);
                 }
             ]
         ],
@@ -26,7 +20,7 @@ return [
             'title' => 'Пароль',
             'required' => true,
             'type' => 'password',
-            'name' => 'login-password',
+            'name' => 'password',
             'placeholder' => 'Введите пароль',
             'field_type' => 'input',
             'icon-name' => 'password',
@@ -34,9 +28,6 @@ return [
             'validations' => [
                 0 => function ($field_name) {
                     return validateFilled($field_name);
-                },
-                1 => function ($field_name) {
-                    return validatePasswordLength($field_name);
                 }
             ]
         ]
