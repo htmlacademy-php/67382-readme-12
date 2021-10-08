@@ -36,7 +36,7 @@
         </form>
         <div class="header__nav-wrapper">
             <nav class="header__nav">
-                <?php if ($is_reg_page): ?>
+                <?php if ($no_session): ?>
                     <ul class="header__user-nav">
                         <li class="header__authorization">
                             <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>

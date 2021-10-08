@@ -27,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'errors' => $errors, 'login_form' => $login_form
         ]);
     } else {
-        header("Location: /feed.php");
+        header('Location: /feed.php');
         exit();
     }
 } else {
     if (isset($_SESSION['user'])) {
-        header("Location: /feed.php");
+        header('Location: /feed.php');
         exit();
     } else {
         $page_content = include_template('main', [

@@ -140,12 +140,12 @@ function sidebar_error_title($key, $post_type) {
  * @user_name - пользователь
  *
  */
-function show_page($page_content, $page_name, $user_name, $is_reg_page) {
+function show_page($page_content, $page_name, $user_name, $no_session) {
     $layout_content = include_template('layout', [
         'content' => $page_content,
         'page_name' => $page_name,
         'user_name' => $user_name,
-        'is_reg_page' => $is_reg_page
+        'no_session' => $no_session
     ]);
 
     print($layout_content);

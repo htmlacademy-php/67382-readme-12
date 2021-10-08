@@ -1,9 +1,13 @@
 <?php
 require_once 'util/helpers.php';
-require_once 'tmp-data.php';
 require_once 'util/functions.php';
 require_once 'util/db_functions.php';
 require_once 'init.php';
+
+if (!isset($_SESSION['user'])) {
+    header('Location: /index.php');
+    exit();
+}
 
 $adding_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 if (!in_array($adding_type, array_column($posts_types, 'type'))) {
@@ -65,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $new_post['content'] = $img_path;
         }
-        $new_post['user_id'] = 4;
+        $new_post['user_id'] = $_SESSION['user']['id'];
         $new_post['is_repost'] = 0;
         $new_post_id = add_new_post($con, $new_post, $post_tags);
         header("Location: post.php?post_id=" . $new_post_id);
@@ -79,4 +83,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'readme: добавить пост';
-show_page($page_content, $page_title, $user_name, false);
+show_page($page_content, $page_title, $_SESSION['user']['user_name'], false);
