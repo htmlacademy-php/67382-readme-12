@@ -15,7 +15,7 @@
 <header class="header">
     <div class="header__wrapper container">
         <div class="header__logo-wrapper">
-            <a class="header__logo-link" href="main.html">
+            <a class="header__logo-link" href="index.php">
                 <img class="header__logo" src="img/logo.svg" alt="Логотип readme" width="128" height="24">
             </a>
             <p class="header__topic">
@@ -42,18 +42,18 @@
                             <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
                         </li>
                         <li>
-                            <a class="header__user-button header__user-button--active header__register-button button">Регистрация</a>
+                            <a class="header__user-button header__user-button--active header__register-button button" href="reg.php">Регистрация</a>
                         </li>
                     </ul>
                 <?php else: ?>
                     <ul class="header__my-nav">
                         <li class="header__my-page header__my-page--popular">
-                            <a class="header__page-link header__page-link--active" title="Популярный контент">
+                            <a class="header__page-link header__page-link--active" title="Популярный контент" href="popular.php">
                                 <span class="visually-hidden">Популярный контент</span>
                             </a>
                         </li>
                         <li class="header__my-page header__my-page--feed">
-                            <a class="header__page-link" href="feed.html" title="Моя лента">
+                            <a class="header__page-link" href="feed.php" title="Моя лента">
                                 <span class="visually-hidden">Моя лента</span>
                             </a>
                         </li>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="header__profile-name">
                                     <span>
-                                    <?=$user_name; ?>
+                                    <?= htmlspecialchars($user_name) ?>
                                     </span>
                                     <svg class="header__link-arrow" width="10" height="6">
                                         <use xlink:href="#icon-arrow-right-ad"></use>
@@ -98,7 +98,7 @@
                                         </li>
 
                                         <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
+                                            <a class="header__profile-nav-link" href="logout.php">
                                                 <span class="header__profile-nav-text">
                                                     Выход
                                                 </span>
@@ -109,7 +109,7 @@
                             </div>
                         </li>
                         <li>
-                            <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
+                            <a class="header__post-button button button--transparent" href="add.php">Пост</a>
                         </li>
                     </ul>
 

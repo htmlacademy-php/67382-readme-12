@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            $errors['email'] = 'Пользователь не найден';
         } else {
             $user = mysqli_fetch_array($res, MYSQLI_ASSOC);
-            if (password_verify($_POST['$password'], $user['password'])) {
+            if (password_verify($_POST['password'], $user['password'])) {
                 $_SESSION['user'] = $user;
             } else {
                 $errors['password'] = 'Неверный пароль';
@@ -26,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $page_content = include_template('main', [
             'errors' => $errors, 'login_form' => $login_form
         ]);
+        print($page_content);
+        exit();
     } else {
         header('Location: /feed.php');
         exit();
@@ -38,8 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $page_content = include_template('main', [
             'login_form' => $login_form,
         ]);
+        print($page_content);
+        exit();
     }
 }
-
-$page_title = 'readme: вход';
-show_page($page_content, $page_title, '', true);

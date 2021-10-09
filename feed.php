@@ -8,5 +8,4 @@ if (!isset($_SESSION['user'])) {
     header('Location: /index.php');
     exit();
 }
-
 echo 'Здесь будет лента постов';
