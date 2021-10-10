@@ -43,4 +43,5 @@ $page_content = include_template('popular-page', [
     'content' => $popular_page_content
 ]);
 $page_title = 'readme: популярное';
-show_page($page_content, $page_title, $_SESSION['user']['user_name'], false);
+show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'popular');
+

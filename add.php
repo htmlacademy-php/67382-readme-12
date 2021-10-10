@@ -83,4 +83,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'readme: добавить пост';
-show_page($page_content, $page_title, $_SESSION['user']['user_name'], false);
+show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'add');

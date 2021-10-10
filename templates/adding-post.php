@@ -92,7 +92,7 @@
                     <?php endif; ?>
                     <div class="adding-post__buttons">
                         <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
-                        <a class="adding-post__close" href="index.php">Закрыть</a>
+                        <a class="adding-post__close" href="feed.php">Закрыть</a>
                     </div>
                 </form>
             </section>

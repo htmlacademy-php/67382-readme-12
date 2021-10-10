@@ -42,20 +42,32 @@
                             <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
                         </li>
                         <li>
-                            <a class="header__user-button header__user-button--active header__register-button button" href="reg.php">Регистрация</a>
+                            <?php if ($active_page === 'reg'): ?>
+                                <span class="header__user-button header__user-button--active header__register-button button">Регистрация</span>
+                            <?php else: ?>
+                                <a class="header__user-button header__register-button button" href="reg.php">Регистрация</a>
+                            <?php endif; ?>
                         </li>
                     </ul>
                 <?php else: ?>
                     <ul class="header__my-nav">
                         <li class="header__my-page header__my-page--popular">
-                            <a class="header__page-link header__page-link--active" title="Популярный контент" href="popular.php">
-                                <span class="visually-hidden">Популярный контент</span>
-                            </a>
+                            <?php if ($active_page === 'popular'): ?>
+                                <span class="header__page-link header__page-link--active"><span class="visually-hidden">Популярный контент</span></span>
+                            <?php else: ?>
+                                <a class="header__page-link" title="Популярный контент" href="popular.php">
+                                    <span class="visually-hidden">Популярный контент</span>
+                                </a>
+                            <?php endif; ?>
                         </li>
                         <li class="header__my-page header__my-page--feed">
-                            <a class="header__page-link" href="feed.php" title="Моя лента">
-                                <span class="visually-hidden">Моя лента</span>
-                            </a>
+                            <?php if ($active_page === 'feed'): ?>
+                                <span class="header__page-link header__page-link--active"><span class="visually-hidden">Моя лента</span></span>
+                            <?php else: ?>
+                                <a class="header__page-link" href="feed.php" title="Моя лента">
+                                    <span class="visually-hidden">Моя лента</span>
+                                </a>
+                            <?php endif; ?>
                         </li>
                         <li class="header__my-page header__my-page--messages">
                             <a class="header__page-link" href="messages.html" title="Личные сообщения">
@@ -67,7 +79,7 @@
                         <li class="header__profile">
                             <a class="header__profile-link" href="#">
                                 <div class="header__avatar-wrapper">
-                                    <img class="header__profile-avatar" src="uploads/avatars/userpic-medium.jpg" alt="Аватар профиля">
+                                    <img class="header__profile-avatar" src="<?= $avatar ? 'uploads/avatars/' . strip_tags($avatar) : 'img/icon-input-user.svg'; ?>" alt="Аватар профиля">
                                 </div>
                                 <div class="header__profile-name">
                                     <span>
@@ -109,7 +121,11 @@
                             </div>
                         </li>
                         <li>
-                            <a class="header__post-button button button--transparent" href="add.php">Пост</a>
+                            <?php if ($active_page === 'add'): ?>
+                                <a class="header__post-button header__post-button--active button button--transparent" href="feed.php">Закрыть</a>
+                            <?php else: ?>
+                                <a class="header__post-button button button--transparent" href="add.php">Пост</a>
+                            <?php endif; ?>
                         </li>
                     </ul>
 
