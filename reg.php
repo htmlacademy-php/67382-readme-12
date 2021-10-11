@@ -5,10 +5,7 @@ require_once 'util/db_functions.php';
 require_once 'init.php';
 $reg_form = require_once 'forms-data/reg-form.php';
 
-if (isset($_SESSION['user'])) {
-    header('Location: /feed.php');
-    exit();
-}
+check_session();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

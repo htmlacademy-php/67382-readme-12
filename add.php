@@ -4,10 +4,7 @@ require_once 'util/functions.php';
 require_once 'util/db_functions.php';
 require_once 'init.php';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: /index.php');
-    exit();
-}
+check_no_session();
 
 $adding_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 if (!in_array($adding_type, array_column($posts_types, 'type'))) {

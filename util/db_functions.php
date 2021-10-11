@@ -177,5 +177,37 @@ function add_new_user($con, $new_user) {
     } else {
         show_error(true, $con, false);
     }
-    return $new_post_id;
+    return $new_user_id;
+}
+
+/**
+ * Проверка логина и пароля пользователя
+ *
+ * @con - ресурс соединения
+ * $email - email, введенный пользователем
+ * $password - пароль, введенный пользователем
+ * @return array 0 элемент bool - false, если есть ошибки
+ * true, если пользователь найден
+ * 1 элемент $errors массив с ошибками или $user - данные пользователя из базы
+ */
+
+
+function check_user($con, $email, $password) {
+    $errors = [];
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = mysqli_prepare($con, $sql);
+    mysqli_stmt_bind_param($stmt, 's', $email);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if (mysqli_num_rows($res) === 0) {
+       $errors['email'] = 'Пользователь не найден';
+       return [false, $errors];
+    } else {
+        $user = mysqli_fetch_array($res, MYSQLI_ASSOC);
+        if (!password_verify($password, $user['password'])) {
+            $errors['password'] = 'Неверный пароль';
+            return [false, $errors];
+        }
+    }
+    return [true, $user];
 }

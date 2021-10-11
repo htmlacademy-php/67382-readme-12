@@ -4,10 +4,7 @@ require_once 'util/functions.php';
 require_once 'util/db_functions.php';
 require_once 'init.php';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: /index.php');
-    exit();
-}
+check_no_session();
 
 $post_id = (int) filter_input(INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT);
 if ($post_id) {

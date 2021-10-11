@@ -8,18 +8,12 @@ $login_form = require_once 'forms-data/login-form.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = validate_form($login_form, $con);
     if (!count($errors)) {
-        $email = mysqli_real_escape_string($con, htmlspecialchars($_POST['email']));
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $res = mysqli_query($con, $sql);
-        if (mysqli_num_rows($res) === 0) {
-           $errors['email'] = 'Пользователь не найден';
+        $user_result = check_user($con, $_POST['email'], $_POST['password']);
+        if ($user_result[0]) {
+            $user = $user_result[1];
+            $_SESSION['user'] = $user;
         } else {
-            $user = mysqli_fetch_array($res, MYSQLI_ASSOC);
-            if (password_verify($_POST['password'], $user['password'])) {
-                $_SESSION['user'] = $user;
-            } else {
-                $errors['password'] = 'Неверный пароль';
-            }
+            $errors = array_merge($errors, $temp_errors);
         }
     }
     if (count($errors)) {
@@ -33,14 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 } else {
-    if (isset($_SESSION['user'])) {
-        header('Location: /feed.php');
-        exit();
-    } else {
-        $page_content = include_template('main', [
-            'login_form' => $login_form,
-        ]);
-        print($page_content);
-        exit();
-    }
+    check_session();
+    $page_content = include_template('main', [
+        'login_form' => $login_form,
+    ]);
+    print($page_content);
+    exit();
 }

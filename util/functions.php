@@ -154,6 +154,30 @@ function show_page($page_content, $page_name, $user_name, $avatar, $no_session, 
 }
 
 /**
+ * Переход на страницу ленты постов, если есть сессия
+ *
+ */
+
+function check_session() {
+    if ($_SESSION['user']) {
+        header('Location: /feed.php');
+        exit();
+    }
+}
+
+/**
+ * Переход на главную страницу, если нет сессии
+ *
+ */
+
+function check_no_session() {
+    if (!$_SESSION['user']) {
+        header('Location: /index.php');
+        exit();
+    }
+}
+
+/**
  * Добавляет к ссылке имя протокола, если его нет
  *
  * $url_string - ссылка, введенная пользователем

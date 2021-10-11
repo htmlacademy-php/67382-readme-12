@@ -10,7 +10,7 @@ if (!$con) {
     $page_content = include_template('error-layout', [
         'error' => $error
     ]);
-    if (isset($_SESSION['user'])) {
+    if ($_SESSION['user']) {
         show_page($page_content, 'readme: ошибка!', $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'error');
     } else {
         show_page($page_content, 'readme: ошибка!', '', '', true, 'error');
