@@ -140,16 +140,50 @@ function sidebar_error_title($key, $post_type) {
  * @user_name - пользователь
  *
  */
-function show_page($page_content, $page_name, $user_name, $is_reg_page) {
+function show_page($page_content, $page_name, $user_name, $avatar, $no_session, $active_page) {
     $layout_content = include_template('layout', [
         'content' => $page_content,
         'page_name' => $page_name,
         'user_name' => $user_name,
-        'is_reg_page' => $is_reg_page
+        'avatar' => $avatar,
+        'no_session' => $no_session,
+        'active_page' => $active_page
     ]);
 
     print($layout_content);
 }
+
+/**
+ * Переход на страницу ленты постов, если есть сессия
+ *
+ */
+
+function check_session() {
+    if ($_SESSION['user']) {
+        header('Location: /feed.php');
+        exit();
+    }
+}
+
+/**
+ * Переход на главную страницу, если нет сессии
+ *
+ */
+
+function check_no_session() {
+    if (!$_SESSION['user']) {
+        header('Location: /index.php');
+        exit();
+    }
+}
+
+/**
+ * Добавляет к ссылке имя протокола, если его нет
+ *
+ * $url_string - ссылка, введенная пользователем
+ * @return string $check_url ссылка, которая всегда начинается с имени протокола
+ *
+ */
 
 function make_link($url_string) {
     $check_url = strip_tags($url_string);
@@ -182,17 +216,41 @@ function show_error($is_err_mysql, $err, $is_err_404) {
     exit;
 }
 
+/**
+ * Проверка заполнения обязательного поля формы.
+ *
+ * @param string $field_name - имя поля
+ * @return string - текст ошибки, если поле не заполнено
+ *
+ */
+
 function validateFilled($field_name) {
     if (empty($_POST[$field_name])) {
         return 'Это поле должно быть заполнено';
     }
 }
 
+/**
+ * Проверка длины цитаты.
+ *
+ * @param string $field_name - имя поля
+ * @return string - текст ошибки, если цитата слишком длинная
+ *
+ */
+
 function validateQuoteLength($field_name) {
     if (strlen($_POST[$field_name]) > 70) {
         return 'Цитата не должна превышать 70 знаков.';
     }
 }
+
+/**
+ * Проверка, является ли текст в поле ссылкой.
+ *
+ * @param string $field_name - имя поля
+ * @return string - текст ошибки, если в поле не ссылка
+ *
+ */
 
 function validateUrl($field_name) {
     if (!filter_var(make_link($_POST[$field_name]), FILTER_VALIDATE_URL)) {
@@ -201,12 +259,29 @@ function validateUrl($field_name) {
     return false;
 }
 
+/**
+ * Проверяет, является ли текст в поле корректным e-mail-адресом
+ *
+ * @param string $field_name - имя поля
+ * @return string - текст ошибки, если в поле не e-mail
+ *
+ */
+
 function validateEmailCorrect($field_name) {
     if (!filter_var($_POST[$field_name], FILTER_VALIDATE_EMAIL)) {
         return 'Значение поля не является корректным email-адресом';
     }
     return false;
 }
+
+/**
+ * Проверяет e-mail на уникальность
+ *
+ * @param string $field_name - имя поля
+ * @param $con - ресурс соединения
+ * @return string - текст ошибки, если e-mail найден в базе
+ *
+ */
 
 function validateEmailUnique($field_name, $con) {
     $email = mysqli_real_escape_string($con, $_POST[$field_name]);
@@ -218,11 +293,28 @@ function validateEmailUnique($field_name, $con) {
     return false;
 }
 
+/**
+ * Проверка длины пароля.
+ *
+ * @param string $field_name - имя поля
+ * @return string - текст ошибки, если пароль слишком короткий
+ *
+ */
+
 function validatePasswordLength($field_name) {
     if (strlen($_POST[$field_name]) < 5) {
         return 'Пароль должен быть не менее 5 знаков';
     }
 }
+
+/**
+ * Проверка совпадения паролей в двух полях ввода.
+ *
+ * @param string $field_name - имя поля
+ * @param string $add_field - имя второго поля
+ * @return string - текст ошибки, если пароли не совпадают
+ *
+ */
 
 function validatePassword($field_name, $add_field) {
     if ($_POST[$field_name] !== $_POST[$add_field]) {
@@ -230,6 +322,17 @@ function validatePassword($field_name, $add_field) {
     }
     return false;
 }
+
+/**
+ * Валидация формы, запуск всех проверок всех полей
+ *
+ * @param string $form - имя формы
+ * @param $con - ресурс соединения, для проверки уникальности e-mail'а
+ * @return array - $errors массив ошибок для всех полей, кроме фото
+ * для фото: двумерный массив, 0 элемент $errors массив ошибок, 1 элемент $isPhotoAtLink bool фото берется по ссылке или загружено
+ * для фото по ссылке добавляется 2 элемент "ссылка", т.к. ссылка при проверке модифицируется
+ *
+ */
 
 function validate_form($form, $con) {
     $errors = [];
@@ -241,25 +344,14 @@ function validate_form($form, $con) {
             $complex_validation_field = $field['validations_field'];
         } else {
             if ($field['name'] === $complex_validation_field) {
-                    $photo_result = validatePhoto($field['name'], $add_field_name);
-                    $temp_errors = $photo_result[0];
-                    $isPhotoAtLink = $photo_result[1];
-                    $errors = array_merge($errors, $temp_errors);
-                    $complex_validation_field = '';
-                    $add_field_name = '';
+                $photo_result = validatePhoto($field['name'], $add_field_name);
+                $temp_errors = $photo_result[0];
+                $isPhotoAtLink = $photo_result[1];
+                $errors = array_merge($errors, $temp_errors);
+                $complex_validation_field = '';
+                $add_field_name = '';
             } else {
-                foreach ($field['validations'] as $key => $validation) {
-                    if (!isset($errors[$field['name']])) {
-                        if (($field['name'] === 'reg-email') && ($key === 2)) {
-                            $error = $validation($field['name'], $con);
-                        } else {
-                            $error = $validation($field['name']);
-                        }
-                        if ($error) {
-                            $errors[$field['name']] = $error;
-                        }
-                    }
-                }
+                validate_field($field, $errors, $con);
             }
         }
     }
@@ -271,6 +363,42 @@ function validate_form($form, $con) {
     }
     return $errors;
 }
+
+/**
+ * Валидация поля по всем проверкам, если не используется совместная валидация двух полей.
+ *
+ * @param $field - поле
+ * @param &$errors - массив с ошибками функции validate_form
+ * @param $con - ресурс соединения, для проверки уникальности e-mail'а
+ *
+ */
+
+function validate_field($field, &$errors, $con) {
+    foreach ($field['validations'] as $key => $validation) {
+        if (!isset($errors[$field['name']])) {
+            if (($field['name'] === 'reg-email') && ($key === 2)) {
+                $error = $validation($field['name'], $con);
+            } else {
+                $error = $validation($field['name']);
+            }
+            if ($error) {
+                $errors[$field['name']] = $error;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * Валидация фото, загруженного пользователем или по ссылке.
+ *
+ * @param string $field_name - имя поля (загруженный файл фото)
+ * @param string $add_field - имя второго поля (ссылка на фото)
+ * @return array 0 элемент $temp_errors временный массив ошибок, который будет добавлен к основному вызывающей функцией
+ * 1 элемент $isPhotoAtLink bool фото берется по ссылке или загружено
+ * для фото по ссылке добавляется 2 элемент "ссылка", т.к. ссылка при проверке модифицируется
+ *
+ */
 
 function validatePhoto($field_name, $add_field) {
     $temp_errors = [];
@@ -306,6 +434,14 @@ function validatePhoto($field_name, $add_field) {
     }
     return [$temp_errors, false];
 }
+
+/**
+ * Проверка фото, загруженного пользователем.
+ *
+ * @param string $field_name - имя поля
+ * @return string|bool строка ошибки или false, если нет ошибки
+ *
+ */
 
 function validateUploadedPicture($field_name) {
     if ($_FILES[$field_name]['size'] > 0) {
