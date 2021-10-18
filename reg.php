@@ -38,4 +38,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'readme: регистрация';
-show_page($page_content, $page_title, '', '', true, 'reg');
+show_page($page_content, $page_title, '', '', true, 'reg', (isset($search_form_text) ?? ''));

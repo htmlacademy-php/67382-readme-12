@@ -14,7 +14,7 @@ if ($post_id) {
         'post' => $post, 'user_posts_total' => $user_posts_total
     ]);
     $page_title = 'readme: пост';
-    show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'post');
+    show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'post', (isset($search_form_text) ?? ''));
 } else {
     show_error(false, '404: Страница не существует', true);
 }

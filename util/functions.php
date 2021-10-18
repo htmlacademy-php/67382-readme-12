@@ -140,14 +140,15 @@ function sidebar_error_title($key, $post_type) {
  * @user_name - пользователь
  *
  */
-function show_page($page_content, $page_name, $user_name, $avatar, $no_session, $active_page) {
+function show_page($page_content, $page_name, $user_name, $avatar, $no_session, $active_page, $search_form_text) {
     $layout_content = include_template('layout', [
         'content' => $page_content,
         'page_name' => $page_name,
         'user_name' => $user_name,
         'avatar' => $avatar,
         'no_session' => $no_session,
-        'active_page' => $active_page
+        'active_page' => $active_page,
+        'search_form_text' => $search_form_text
     ]);
 
     print($layout_content);
@@ -175,6 +176,16 @@ function check_no_session() {
         header('Location: /index.php');
         exit();
     }
+}
+
+/**
+ * Переход на предыдущую страницу
+ *
+ */
+
+function go_back() {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit();
 }
 
 /**
@@ -212,7 +223,11 @@ function show_error($is_err_mysql, $err, $is_err_404) {
     if ($is_err_404) {
         header("HTTP/1.1 404 Not Found");
     }
-    show_page($page_content, $page_title, $user_name, false);
+    if ($_SESSION['user']) {
+        show_page($page_content, 'readme: ошибка!', $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'error', (isset($search_form_text) ?? ''));
+    } else {
+        show_page($page_content, 'readme: ошибка!', '', '', true, 'error', (isset($search_form_text) ?? ''));
+    }
     exit;
 }
 

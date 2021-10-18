@@ -11,9 +11,9 @@ if (!$con) {
         'error' => $error
     ]);
     if ($_SESSION['user']) {
-        show_page($page_content, 'readme: ошибка!', $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'error');
+        show_page($page_content, 'readme: ошибка!', $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'error', (isset($search_form_text) ?? ''));
     } else {
-        show_page($page_content, 'readme: ошибка!', '', '', true, 'error');
+        show_page($page_content, 'readme: ошибка!', '', '', true, 'error', (isset($search_form_text) ?? ''));
     }
     exit;
 }
