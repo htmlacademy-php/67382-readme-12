@@ -22,6 +22,7 @@
                 micro blogging
             </p>
         </div>
+        <?php if (!$no_session): ?>
         <form class="header__search-form form" action="search.php" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
@@ -34,6 +35,7 @@
                 </button>
             </div>
         </form>
+        <?php endif; ?>
         <div class="header__nav-wrapper">
             <nav class="header__nav">
                 <?php if ($no_session): ?>
