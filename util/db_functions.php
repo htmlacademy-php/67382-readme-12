@@ -123,9 +123,8 @@ JOIN tags
     $res = mysqli_stmt_get_result($stmt);
     if (mysqli_num_rows($res) === 0) {
         return false;
-    } else {
-        return mysqli_fetch_all($res, MYSQLI_ASSOC);
     }
+    return mysqli_fetch_all($res, MYSQLI_ASSOC);
 }
 
 /**
