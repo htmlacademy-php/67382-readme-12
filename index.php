@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'errors' => $errors,
             'login_form' => $login_form
         ]);
-        print($page_content);
     } else {
         header('Location: feed.php');
     }
@@ -27,5 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $page_content = include_template('main', [
         'login_form' => $login_form,
     ]);
-    print($page_content);
 }
+$layout_content = include_template('layout', [
+    'content' => $page_content,
+    'page_name' => 'readme: блог, каким он должен быть',
+    'active_page' => 'index'
+]);
+print($layout_content);
