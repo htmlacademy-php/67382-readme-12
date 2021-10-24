@@ -16,9 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $validation_result = validate_form($adding_form, $con);
         $errors = $validation_result[0];
         $isPhotoAtLink = $validation_result[1];
-        if ($isPhotoAtLink) {
-            $photo_url = $validation_result[2];
-        }
+        $photo_url = $isPhotoAtLink ? $validation_result[2] : '';
     } else {
         $errors = validate_form($adding_form, $con);
     }
@@ -56,15 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
     } else {
         if ($adding_type === 'photo') {
-            if ($isPhotoAtLink) {
-                $img_path = basename($photo_url);
-                $photo_file = file_get_contents($photo_url);
-                file_put_contents('uploads/' . $img_path, $photo_file);
-            } else {
-                $img_path = $_FILES['file-photo']['name'];
-                move_uploaded_file($_FILES['file-photo']['tmp_name'], 'uploads/' . $img_path);
-            }
-            $new_post['content'] = $img_path;
+            $new_post['content'] = processPhoto($isPhotoAtLink, $photo_url);
         }
         $new_post['user_id'] = $_SESSION['user']['id'];
         $new_post['is_repost'] = 0;

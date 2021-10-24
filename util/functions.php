@@ -461,3 +461,24 @@ function validateUploadedPicture($field_name) {
     }
     return false;
 }
+
+/**
+ * Перемещение фото в папку загрузок, когда нет ошибок.
+ *
+ * @param bool $isPhotoAtLink - фото берется по ссылке или загружено
+ * @param string $photo_url - ссылка на файл, когда фото по ссылке
+ * @return string ссылка на фото в папке загрузок, которую сохраним в базе
+ *
+ */
+
+function processPhoto($isPhotoAtLink, $photo_url) {
+    if ($isPhotoAtLink) {
+        $img_path = basename($photo_url);
+        $photo_file = file_get_contents($photo_url);
+        file_put_contents('uploads/' . $img_path, $photo_file);
+    } else {
+        $img_path = $_FILES['file-photo']['name'];
+        move_uploaded_file($_FILES['file-photo']['tmp_name'], 'uploads/' . $img_path);
+    }
+    return $img_path;
+}
