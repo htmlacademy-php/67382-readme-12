@@ -11,8 +11,8 @@
                     <?php if ($field['field_type'] !== 'input-file'): ?>
                         <div class="registration__input-wrapper form__input-wrapper">
                             <label class="registration__label form__label" for="<?= $field['name']; ?>"><?= $field['title']; ?><?= ($field['required']) ? ' <span class="form__input-required">*</span>' : ''; ?></label>
-                            <div class="form__input-section<?= ($errors[$field['name']]) ? ' form__input-section--error' : ''; ?>">
-                                <input class="registration__input form__input" id="<?= $field['name']; ?>" type="<?= $field['type']; ?>" name="<?= $field['name']; ?>" placeholder="<?= $field['placeholder'] ?? ''; ?>" value="<?= ($_POST[$field['name']]) ? $_POST[$field['name']] : ''; ?>">
+                            <div class="form__input-section<?= isset($errors[$field['name']]) ? ' form__input-section--error' : ''; ?>">
+                                <input class="registration__input form__input" id="<?= $field['name']; ?>" type="<?= $field['type']; ?>" name="<?= $field['name']; ?>" placeholder="<?= $field['placeholder'] ?? ''; ?>" value="<?= isset($_POST[$field['name']]) ? $_POST[$field['name']] : ''; ?>">
                                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                         <div class="form__error-text">
                                             <h3 class="form__error-title"><?= $field['title']; ?></h3>
@@ -37,7 +37,7 @@
 
             <?php if ($field['field_type'] === 'input-file'): ?>
                 <div class="registration__input-file-container form__input-container form__input-container--file">
-                    <div class="registration__input-file-wrapper form__input-file-wrapper js-file-error form__input-section<?= ($errors[$field['name']]) ? ' form__input-section--error' : ''; ?>"<?= ($errors[$field['name']]) ? ' style="border: 2px solid #f02323!important;border-radius: 10px!important;"' : ''; ?>>
+                    <div class="registration__input-file-wrapper form__input-file-wrapper js-file-error form__input-section<?= isset($errors[$field['name']]) ? ' form__input-section--error' : ''; ?>"<?= isset($errors[$field['name']]) ? ' style="border: 2px solid #f02323!important;border-radius: 10px!important;"' : ''; ?>>
                         <div class="registration__file-zone form__file-zone js-dropzone">
                             <input class="registration__input-file form__input-file" id="<?= $field['name']; ?>" type="file" name="<?= $field['name']; ?>">
                             <div class="form__file-zone-text">

@@ -1,11 +1,16 @@
 <?php
-require_once 'util/helpers.php';
-require_once 'util/functions.php';
-require_once 'util/db_functions.php';
 require_once 'init.php';
 
 check_no_session();
 
-$page_title = 'readme: моя лента';
 $page_content = '<section class="page__main"><p style="padding:100px 20px;">Здесь будет лента постов</p></section>';
-show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'feed', (isset($search_form_text) ?? ''));
+$layout_content = include_template('layout', [
+    'content' => $page_content,
+    'page_name' => 'readme: моя лента',
+    'user_name' => $_SESSION['user']['user_name'],
+    'avatar' => $_SESSION['user']['avatar'],
+    'active_page' => 'feed',
+    'search_form_text' => (isset($search_form_text) ?? '')
+]);
+
+print($layout_content);

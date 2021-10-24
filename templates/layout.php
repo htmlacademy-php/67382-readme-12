@@ -22,7 +22,7 @@
                 micro blogging
             </p>
         </div>
-        <?php if (!$no_session): ?>
+        <?php if (isset($user_name)): ?>
         <form class="header__search-form form" action="search.php" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
@@ -38,7 +38,7 @@
         <?php endif; ?>
         <div class="header__nav-wrapper">
             <nav class="header__nav">
-                <?php if ($no_session): ?>
+                <?php if (!isset($user_name)): ?>
                     <ul class="header__user-nav">
                         <li class="header__authorization">
                             <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>

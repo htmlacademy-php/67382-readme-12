@@ -62,14 +62,14 @@
             <form class="authorization__form form" action="index.php" method="post">
             <?php foreach ($login_form['fields'] as $field): ?>
                 <div class="authorization__input-wrapper form__input-wrapper">
-                    <div class="form__input-section<?= ($errors[$field['name']]) ? ' form__input-section--error' : ''; ?>">
-                        <input class="authorization__input form__input authorization__input--<?= ($field['type'] === 'password') ? 'password' : 'login'; ?>" id="<?= $field['name']; ?>" type="<?= $field['type']; ?>" name="<?= $field['name']; ?>" placeholder="<?= $field['title'] ?? ''; ?>" value="<?= ($_POST[$field['name']]) ? $_POST[$field['name']] : ''; ?>">
+                    <div class="form__input-section<?= isset($errors[$field['name']]) ? ' form__input-section--error' : ''; ?>">
+                        <input class="authorization__input form__input authorization__input--<?= ($field['type'] === 'password') ? 'password' : 'login'; ?>" id="<?= $field['name']; ?>" type="<?= $field['type']; ?>" name="<?= $field['name']; ?>" placeholder="<?= $field['title'] ?? ''; ?>" value="<?= isset($_POST[$field['name']]) ? $_POST[$field['name']] : ''; ?>">
                         <svg class="form__input-icon" <?= $field['icon-size']; ?>>
                             <use xlink:href="#icon-input-<?= $field['icon-name']; ?>"></use>
                         </svg>
                         <label class="visually-hidden"><?= $field['title']; ?>"></label>
                     </div>
-                    <span class="form__error-label<?= ($field['type'] === 'email') ? ' form__error-label--login' : ''; ?>"><?= ($errors[$field['name']]) ? $errors[$field['name']] : ''; ?></span>
+                    <span class="form__error-label<?= ($field['type'] === 'email') ? ' form__error-label--login' : ''; ?>"><?= isset($errors[$field['name']]) ? $errors[$field['name']] : ''; ?></span>
                 </div>
             <?php endforeach; ?>
                 <a class="authorization__recovery" href="#">Восстановить пароль</a>

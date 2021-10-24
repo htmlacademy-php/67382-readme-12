@@ -133,35 +133,13 @@ function sidebar_error_title($key, $post_type) {
 }
 
 /**
- * Вывод страницы
- *
- * @page_content - содержимое страницы
- * @page_name - заголовок страницы
- * @user_name - пользователь
- *
- */
-function show_page($page_content, $page_name, $user_name, $avatar, $no_session, $active_page, $search_form_text) {
-    $layout_content = include_template('layout', [
-        'content' => $page_content,
-        'page_name' => $page_name,
-        'user_name' => $user_name,
-        'avatar' => $avatar,
-        'no_session' => $no_session,
-        'active_page' => $active_page,
-        'search_form_text' => $search_form_text
-    ]);
-
-    print($layout_content);
-}
-
-/**
  * Переход на страницу ленты постов, если есть сессия
  *
  */
 
 function check_session() {
-    if ($_SESSION['user']) {
-        header('Location: /feed.php');
+    if (!empty($_SESSION['user'])) {
+        header('Location: feed.php');
         exit();
     }
 }
@@ -172,8 +150,8 @@ function check_session() {
  */
 
 function check_no_session() {
-    if (!$_SESSION['user']) {
-        header('Location: /index.php');
+    if (empty($_SESSION['user'])) {
+        header('Location: index.php');
         exit();
     }
 }
@@ -219,15 +197,26 @@ function show_error($is_err_mysql, $err, $is_err_404) {
     $page_content = include_template('error-layout', [
         'error' => $error
     ]);
-    $page_title = 'readme: ошибка!';
     if ($is_err_404) {
         header("HTTP/1.1 404 Not Found");
     }
-    if ($_SESSION['user']) {
-        show_page($page_content, 'readme: ошибка!', $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'error', (isset($search_form_text) ?? ''));
+    if (!empty($_SESSION['user'])) {
+        $layout_content = include_template('layout', [
+            'content' => $page_content,
+            'page_name' => 'readme: ошибка!',
+            'user_name' => $_SESSION['user']['user_name'],
+            'avatar' => $_SESSION['user']['avatar'],
+            'active_page' => 'error',
+            'search_form_text' => (isset($search_form_text) ?? '')
+        ]);
     } else {
-        show_page($page_content, 'readme: ошибка!', '', '', true, 'error', (isset($search_form_text) ?? ''));
+        $layout_content = include_template('layout', [
+            'content' => $page_content,
+            'page_name' => 'readme: ошибка!',
+            'active_page' => 'error',
+        ]);
     }
+    print($layout_content);
     exit;
 }
 
