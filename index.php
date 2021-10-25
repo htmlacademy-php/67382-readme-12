@@ -1,7 +1,4 @@
 <?php
-require_once 'util/helpers.php';
-require_once 'util/functions.php';
-require_once 'util/db_functions.php';
 require_once 'init.php';
 $login_form = require_once 'forms-data/login-form.php';
 
@@ -18,19 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (count($errors)) {
         $page_content = include_template('main', [
-            'errors' => $errors, 'login_form' => $login_form
+            'errors' => $errors,
+            'login_form' => $login_form
         ]);
-        print($page_content);
-        exit();
     } else {
-        header('Location: /feed.php');
-        exit();
+        header('Location: feed.php');
     }
 } else {
     check_session();
     $page_content = include_template('main', [
         'login_form' => $login_form,
     ]);
-    print($page_content);
-    exit();
 }
+$layout_content = include_template('layout', [
+    'content' => $page_content,
+    'page_name' => 'readme: блог, каким он должен быть',
+    'active_page' => 'index'
+]);
+print($layout_content);

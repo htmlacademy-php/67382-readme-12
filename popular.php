@@ -1,7 +1,4 @@
 <?php
-require_once 'util/helpers.php';
-require_once 'util/functions.php';
-require_once 'util/db_functions.php';
 require_once 'init.php';
 
 check_no_session();
@@ -12,8 +9,8 @@ $filters_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
 $sorting_type = filter_input(INPUT_GET, 'sorting', FILTER_SANITIZE_STRING);
 $sorting_order = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_STRING);
 if (!in_array($filters_type, array_column($posts_types, 'type'))) {
-    $filters_type = NULL;
-    $filters_type_id = NULL;
+    $filters_type = null;
+    $filters_type_id = null;
 } else {
     foreach ($posts_types as $post_type) {
         if ($post_type['type'] === $filters_type) {
@@ -34,11 +31,23 @@ $posts_content = include_template('posts', [
     'popular_posts' => $popular_posts
 ]);
 $popular_page_content = include_template('popular-layout', [
-    'content' => $posts_content, 'posts_types' => $posts_types, 'filters_type' => $filters_type, 'sorting_type' => $sorting_type, 'sorting_order' => $sorting_order
+    'content' => $posts_content,
+    'posts_types' => $posts_types,
+    'filters_type' => $filters_type,
+    'sorting_type' => $sorting_type,
+    'sorting_order' => $sorting_order
 ]);
 $page_content = include_template('popular-page', [
     'content' => $popular_page_content
 ]);
-$page_title = 'readme: популярное';
-show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'popular');
+
+$layout_content = include_template('layout', [
+    'content' => $page_content,
+    'page_name' => 'readme: популярное',
+    'user_name' => $_SESSION['user']['user_name'],
+    'avatar' => $_SESSION['user']['avatar'],
+    'active_page' => 'popular',
+    'search_form_text' => (isset($search_form_text) ?? '')
+]);
+print($layout_content);
 

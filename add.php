@@ -1,7 +1,4 @@
 <?php
-require_once 'util/helpers.php';
-require_once 'util/functions.php';
-require_once 'util/db_functions.php';
 require_once 'init.php';
 
 check_no_session();
@@ -19,9 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $validation_result = validate_form($adding_form, $con);
         $errors = $validation_result[0];
         $isPhotoAtLink = $validation_result[1];
-        if ($isPhotoAtLink) {
-            $photo_url = $validation_result[2];
-        }
+        $photo_url = $isPhotoAtLink ? $validation_result[2] : '';
     } else {
         $errors = validate_form($adding_form, $con);
     }
@@ -37,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_post['title'] = $_POST['post-heading'];
     if (($adding_type === 'text') || ($adding_type === 'quote')) {
         $new_post['content'] = $_POST['post-text'];
-    } else if (($adding_type === 'video') || ($adding_type === 'link')) {
+    } elseif (($adding_type === 'video') || ($adding_type === 'link')) {
         $new_post['content'] = make_link($_POST['post-url']);
     }
 
@@ -45,26 +40,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_post['content'] = '';
     }
 
-    $new_post['cite_author'] = ($adding_type === 'quote') ? $_POST['cite_author'] : NULL;
+    $new_post['cite_author'] = ($adding_type === 'quote') ? $_POST['cite_author'] : null;
 
     $post_tags = ($_POST['tags']) ? explode(' ', strip_tags($_POST['tags'])) : false;
 
     if (count($errors)) {
         $new_post['tags'] = strip_tags($_POST['tags']);
         $page_content = include_template('adding-post', [
-            'posts_types' => $posts_types, 'adding_type' => $adding_type, 'errors' => $errors, 'adding_form' => $adding_form
+            'posts_types' => $posts_types,
+            'adding_type' => $adding_type,
+            'errors' => $errors,
+            'adding_form' => $adding_form
         ]);
     } else {
         if ($adding_type === 'photo') {
-            if ($isPhotoAtLink) {
-                $img_path = basename($photo_url);
-                $photo_file = file_get_contents($photo_url);
-                file_put_contents('uploads/' . $img_path, $photo_file);
-            } else {
-                $img_path = $_FILES['file-photo']['name'];
-                move_uploaded_file($_FILES['file-photo']['tmp_name'], 'uploads/' . $img_path);
-            }
-            $new_post['content'] = $img_path;
+            $new_post['content'] = processPhoto($isPhotoAtLink, $photo_url);
         }
         $new_post['user_id'] = $_SESSION['user']['id'];
         $new_post['is_repost'] = 0;
@@ -75,9 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     $adding_form = require_once 'forms-data/add-' . $adding_type . '-form.php';
     $page_content = include_template('adding-post', [
-        'posts_types' => $posts_types, 'adding_type' => $adding_type, 'adding_form' => $adding_form
+        'posts_types' => $posts_types,
+        'adding_type' => $adding_type,
+        'adding_form' => $adding_form
     ]);
 }
 
-$page_title = 'readme: добавить пост';
-show_page($page_content, $page_title, $_SESSION['user']['user_name'], $_SESSION['user']['avatar'], false, 'add');
+$layout_content = include_template('layout', [
+    'content' => $page_content,
+    'page_name' => 'readme: добавить пост',
+    'user_name' => $_SESSION['user']['user_name'],
+    'avatar' => $_SESSION['user']['avatar'],
+    'active_page' => 'add',
+    'search_form_text' => (isset($search_form_text) ?? '')
+]);
+print($layout_content);

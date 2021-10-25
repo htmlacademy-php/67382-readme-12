@@ -1,7 +1,4 @@
 <?php
-require_once 'util/helpers.php';
-require_once 'util/functions.php';
-require_once 'util/db_functions.php';
 require_once 'init.php';
 $reg_form = require_once 'forms-data/reg-form.php';
 
@@ -17,7 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (count($errors)) {
         $page_content = include_template('registration', [
-            'errors' => $errors, 'reg_form' => $reg_form
+            'errors' => $errors,
+            'reg_form' => $reg_form
         ]);
     } else {
         if ($_FILES['file-userpic']['size'] > 0) {
@@ -29,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         add_new_user($con, $new_user);
         header("Location: index.php");
-        exit();
     }
 } else {
     $page_content = include_template('registration', [
@@ -37,5 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 }
 
-$page_title = 'readme: регистрация';
-show_page($page_content, $page_title, '', '', true, 'reg');
+$layout_content = include_template('layout', [
+    'content' => $page_content,
+    'page_name' => 'readme: регистрация',
+    'active_page' => 'reg',
+]);
+print($layout_content);

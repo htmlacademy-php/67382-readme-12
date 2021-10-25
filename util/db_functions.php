@@ -49,7 +49,86 @@ ORDER BY " . $sorting_type_string . $sorting_order_string;
 }
 
 /**
- * Получение из базы выборки популярных запросов
+ * Получение из базы результатов поиска
+ *
+ * @con - ресурс соединения
+ * $search_text string - текст, который ищем
+ * @return - найденные посты для вывода на страницу
+ *
+ */
+
+function get_search_posts($con, $search_text) {
+    $sql = "SELECT post_date,
+    u.user_name,
+    u.avatar,
+    t.type_name,
+    t.type,
+    p.id,
+    title,
+    content,
+    cite_author,
+    views_total,
+    (SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS likes_total,
+    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS comments_total
+FROM posts p
+JOIN users u
+    ON p.user_id = u.id
+JOIN posts_types t
+    ON p.type_id = t.id
+    WHERE MATCH(p.title, p.content) AGAINST(?)";
+    $stmt = db_get_prepare_stmt($con, $sql, [$search_text]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if (mysqli_num_rows($res) === 0) {
+        return false;
+    } else {
+        return mysqli_fetch_all($res, MYSQLI_ASSOC);
+    }
+}
+
+/**
+ * Получение из базы постов с определенным тэгом
+ *
+ * @con - ресурс соединения
+ * $tag string - тэг, который ищем
+ * @return - найденные посты для вывода на страницу
+ *
+ */
+
+function get_posts_by_tag($con, $tag) {
+    $sql = "SELECT post_date,
+    u.user_name,
+    u.avatar,
+    t.type_name,
+    t.type,
+    p.id,
+    title,
+    content,
+    cite_author,
+    views_total,
+    (SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS likes_total,
+    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS comments_total
+FROM posts p
+JOIN users u
+    ON p.user_id = u.id
+JOIN posts_types t
+    ON p.type_id = t.id
+JOIN post_tags ptag
+    ON ptag.post_id = p.id
+JOIN tags
+    ON tags.id = ptag.tag_id
+    WHERE tags.tag_name = ?";
+    $stmt = db_get_prepare_stmt($con, $sql, [$tag]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if (mysqli_num_rows($res) === 0) {
+        return false;
+    }
+    return mysqli_fetch_all($res, MYSQLI_ASSOC);
+}
+
+/**
+ * Получение поста из базы
  *
  * @con - ресурс соединения
  * @post_id int - id поста
@@ -195,8 +274,7 @@ function add_new_user($con, $new_user) {
 function check_user($con, $email, $password) {
     $errors = [];
     $sql = "SELECT * FROM users WHERE email = ?";
-    $stmt = mysqli_prepare($con, $sql);
-    mysqli_stmt_bind_param($stmt, 's', $email);
+    $stmt = db_get_prepare_stmt($con, $sql, [$email]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     if (mysqli_num_rows($res) === 0) {

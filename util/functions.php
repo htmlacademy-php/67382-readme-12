@@ -133,34 +133,13 @@ function sidebar_error_title($key, $post_type) {
 }
 
 /**
- * Вывод страницы
- *
- * @page_content - содержимое страницы
- * @page_name - заголовок страницы
- * @user_name - пользователь
- *
- */
-function show_page($page_content, $page_name, $user_name, $avatar, $no_session, $active_page) {
-    $layout_content = include_template('layout', [
-        'content' => $page_content,
-        'page_name' => $page_name,
-        'user_name' => $user_name,
-        'avatar' => $avatar,
-        'no_session' => $no_session,
-        'active_page' => $active_page
-    ]);
-
-    print($layout_content);
-}
-
-/**
  * Переход на страницу ленты постов, если есть сессия
  *
  */
 
 function check_session() {
-    if ($_SESSION['user']) {
-        header('Location: /feed.php');
+    if (!empty($_SESSION['user'])) {
+        header('Location: feed.php');
         exit();
     }
 }
@@ -171,10 +150,20 @@ function check_session() {
  */
 
 function check_no_session() {
-    if (!$_SESSION['user']) {
-        header('Location: /index.php');
+    if (empty($_SESSION['user'])) {
+        header('Location: index.php');
         exit();
     }
+}
+
+/**
+ * Переход на предыдущую страницу
+ *
+ */
+
+function go_back() {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit();
 }
 
 /**
@@ -208,11 +197,26 @@ function show_error($is_err_mysql, $err, $is_err_404) {
     $page_content = include_template('error-layout', [
         'error' => $error
     ]);
-    $page_title = 'readme: ошибка!';
     if ($is_err_404) {
         header("HTTP/1.1 404 Not Found");
     }
-    show_page($page_content, $page_title, $user_name, false);
+    if (!empty($_SESSION['user'])) {
+        $layout_content = include_template('layout', [
+            'content' => $page_content,
+            'page_name' => 'readme: ошибка!',
+            'user_name' => $_SESSION['user']['user_name'],
+            'avatar' => $_SESSION['user']['avatar'],
+            'active_page' => 'error',
+            'search_form_text' => (isset($search_form_text) ?? '')
+        ]);
+    } else {
+        $layout_content = include_template('layout', [
+            'content' => $page_content,
+            'page_name' => 'readme: ошибка!',
+            'active_page' => 'error',
+        ]);
+    }
+    print($layout_content);
     exit;
 }
 
@@ -456,4 +460,25 @@ function validateUploadedPicture($field_name) {
         }
     }
     return false;
+}
+
+/**
+ * Перемещение фото в папку загрузок, когда нет ошибок.
+ *
+ * @param bool $isPhotoAtLink - фото берется по ссылке или загружено
+ * @param string $photo_url - ссылка на файл, когда фото по ссылке
+ * @return string ссылка на фото в папке загрузок, которую сохраним в базе
+ *
+ */
+
+function processPhoto($isPhotoAtLink, $photo_url) {
+    if ($isPhotoAtLink) {
+        $img_path = basename($photo_url);
+        $photo_file = file_get_contents($photo_url);
+        file_put_contents('uploads/' . $img_path, $photo_file);
+    } else {
+        $img_path = $_FILES['file-photo']['name'];
+        move_uploaded_file($_FILES['file-photo']['tmp_name'], 'uploads/' . $img_path);
+    }
+    return $img_path;
 }
